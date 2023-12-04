@@ -284,6 +284,65 @@ INSERT INTO `board_empty` (`x`, `y`, `b_color`, `b_fun`, `p_color`, `p_num`) VAL
 	(11, 10, 'Y', NULL, NULL, NULL),
 	(11, 11, 'Y', NULL, NULL, NULL);
 
+-- Dumping structure for procedure ludo.clean_board
+DELIMITER //
+CREATE PROCEDURE `clean_board`()
+BEGIN
+	replace INTO `board` select * FROM `board_empty`;
+	update `players` set username=null, token=null;
+   update `game_status` set `status`='not active', `p_turn`=null, `result_1`=null, `result_2`=null, `result_3`=null;
+END//
+DELIMITER ;
+
+-- Dumping structure for πίνακας ludo.game_status
+CREATE TABLE IF NOT EXISTS `game_status` (
+  `status` enum('not active','initialized','started','ended','aborded') NOT NULL DEFAULT 'not active',
+  `p_turn` enum('R','B','G','Y') DEFAULT NULL,
+  `result_1` enum('R','B','G','Y') DEFAULT NULL,
+  `result_2` enum('R','B','G','Y') DEFAULT NULL,
+  `result_3` enum('R','B','G','Y') DEFAULT NULL,
+  `last_change` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table ludo.game_status: ~1 rows (approximately)
+INSERT INTO `game_status` (`status`, `p_turn`, `result_1`, `result_2`, `result_3`, `last_change`) VALUES
+	('not active', NULL, NULL, NULL, NULL, '2023-12-04 16:00:16');
+
+-- Dumping structure for procedure ludo.move_piece
+DELIMITER //
+CREATE PROCEDURE `move_piece`(x1 TINYINT, y1 TINYINT, x2 TINYINT, y2 TINYINT)
+BEGIN
+	DECLARE piece_num,piece_color CHAR;
+	SELECT  p_num, p_color INTO piece_num, piece_color FROM `board` WHERE x=x1 AND y=y1;
+	
+	UPDATE `board` SET p_num=piece_num, p_color=piece_color WHERE X=x2 AND Y=y2;
+	UPDATE `board` SET p_num=NULL, p_color=NULL WHERE X=x1 AND Y=y2;
+	UPDATE `game_status` SET p_turn = (case 
+														when piece_color = 'R' then 'B'
+														when piece_color = 'B' then 'G'
+														when piece_color = 'G' then 'Y'
+														when piece_color = 'Y' then 'R'
+														ELSE null
+														END);
+END//
+DELIMITER ;
+
+-- Dumping structure for πίνακας ludo.players
+CREATE TABLE IF NOT EXISTS `players` (
+  `username` varchar(20) DEFAULT NULL,
+  `p_color` enum('R','B','G','Y') NOT NULL,
+  `token` varchar(100) DEFAULT NULL,
+  `last_action` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`p_color`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- Dumping data for table ludo.players: ~4 rows (approximately)
+INSERT INTO `players` (`username`, `p_color`, `token`, `last_action`) VALUES
+	(NULL, 'R', NULL, NULL),
+	(NULL, 'B', NULL, NULL),
+	(NULL, 'G', NULL, NULL),
+	(NULL, 'Y', NULL, NULL);
+
 -- Dumping structure for πίνακας ludo.positions
 CREATE TABLE IF NOT EXISTS `positions` (
   `x` tinyint(1) NOT NULL,
