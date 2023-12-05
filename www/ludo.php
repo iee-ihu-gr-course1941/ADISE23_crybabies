@@ -25,7 +25,7 @@ switch ($r = array_shift($request)) {
         switch ($b = array_shift($request)){//if the next first element is, idk whatever see bellow
             case '':
             case null: 
-                show_board();//returns a (select * from board) in JSON format, basically makes an API call and prints the result
+                handle_board($method);//
             break;
             
             case 'piece': //this case 'piece' and every name you havent seen before, can be edited from ludo.js file
@@ -45,11 +45,50 @@ switch ($r = array_shift($request)) {
         }
 	break;
 	
-    case 'players': //if the first element is 'status'
-	break;
+    case 'players': //if the first element is 'players'
+        handle_player($method,$request,$input);
+    break;
 
 	default:  
         header("HTTP/1.1 404 Not Found");
     exit;
+}
+
+//checks what kind of communication we want with the API, after that it calls a function from board.php
+function handle_board($method) {
+    if($method=='GET') {
+            show_board();//function from board.php
+    } else if ($method=='POST') {
+            reset_board();//function from board.php
+            show_board();//function from board.php
+    } else {
+        header('HTTP/1.1 405 Method Not Allowed');
+    }
+}
+
+//checks what kind of communication we want with the API, after that it calls a function from gamestat.php
+function handle_status($method) {
+    if($method=='GET') {
+        show_status();//function from gamestat.php
+    } else {
+        header('HTTP/1.1 405 Method Not Allowed');
+    }
+}
+
+//sets a new user to the SQL server or gets info for a user if he exists
+function handle_player($method, $p, $input) {
+    switch ($b=array_shift($p)) {
+        case 'R': 
+        case 'B':
+        case 'G':
+		case 'Y': 
+            handle_user($method, $b, $input);//function from users.php, $b is the color of the player
+		break;
+	
+        default: 
+            header("HTTP/1.1 404 Not Found");
+			print json_encode(['errormesg'=>"Player $b not found."]);
+        break;
+	}
 }
 ?>
