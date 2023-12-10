@@ -1,5 +1,5 @@
 <?php
-function show_piece($x,$y,$p_num,$token) {
+function show_piece($x,$y,$token,$p_num) {
 	$color = current_color($token);
 	global $mysqli;
 	$sql = 'select * from pawns where x=? and y=? and p_num=? and p_color=?';
@@ -55,33 +55,36 @@ function move_piece($x,$y,$x2,$y2,$token,$p_num){
         $st4->execute();
         $res4 = $st4->get_result();
         
-        if(res3 == $color || res4 == "S" || res4 == "_start"){//!!!!!!!!!!!!!
-            do_move($x1,$x2,$x2,$y2,$p_num,$color);//move new piece allongside
-        }else{
-			$st5 = $mysqli->prepare('select p_color from pawns where x=? and y=?');
-			$st5->bind_param('ii',$x2,$y2 );
-			$st5->execute();
-			$res5 = $st5->get_result();
-
+        if(res3 == $color || res4 == "S" || substr($res4, -6) === '_start'){//if, piece colors match or the square has special features
+            do_move($x,$y,$x2,$y2,$p_num,$color);//move new piece alongside
+        }else{//else, the existing piece is not the same color and the square has no safe features, the existing piece has to be replaced
 			$st6 = $mysqli->prepare('select p_num from pawns where x=? and y=?');
 			$st6->bind_param('ii',$x2,$y2 );
 			$st6->execute();
 			$res6 = $st6->get_result();
-			
-			//move piece to sleep position, how?
-            do_move($x1,$x2,$xsleep,$ysleep,$res6,$res5);//move old piece
 
-			do_move($x1,$x2,$x2,$y2,$p_num,$color);//move new piece
+			$st6 = $mysqli->prepare('select x from pawns_empty where p_color=? and p_num=?');
+			$st6->bind_param('ii',$res3,$res6 );
+			$st6->execute();
+			$xsleep = $st6->get_result();
+
+			$st6 = $mysqli->prepare('select y from pawns_empty p_color=? and p_num=?');
+			$st6->bind_param('ii',$res3,$res6 );
+			$st6->execute();
+			$ysleep = $st6->get_result();
+
+            do_move($x2,$y2,$xsleep,$ysleep,$res6,$res3);//move old piece
+
+			do_move($x,$y,$x2,$y2,$p_num,$color);//move new piece
         }
     }else if(population >= 2){//if pionia are 2 akrivos
         //throw dice again or chose another piece
     }else{
-        do_move($x1,$x2,$x2,$y2,$p_num,$color);//move new piece
+        do_move($x,$y,$x2,$y2,$p_num,$color);//move new piece
     }
 }
 
-//this needs taken look at, its not done yet
-function do_move($x1,$x2,$x2,$y2,$p_num,$color) {
+function do_move($x,$y,$x2,$y2,$p_num,$color) {
 	global $mysqli;
 	$sql = 'call `move_piece`(?,?,?,?,?,?);';
 	$st = $mysqli->prepare($sql);
