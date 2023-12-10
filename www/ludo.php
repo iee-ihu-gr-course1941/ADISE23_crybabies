@@ -28,8 +28,9 @@ switch ($r = array_shift($request)) {
                 handle_board($method);//
             break;
             
-            case 'piece': //this case 'piece' and every name you havent seen before, can be edited from ludo.js file
-            break;
+            case 'piece'://this needs p_num to be added sometime
+                handle_piece($method, $request[0],$request[1],$input);
+            break;;
 	        
             default: 
                 header("HTTP/1.1 404 Not Found");
@@ -93,11 +94,11 @@ function handle_player($method, $p, $input) {
 }
 
 //you need to pass p_num, check out if $input can be used
-function handle_piece($method, $x, $y, $input) {
+function handle_piece($method, $x, $y, $input, $p_num) {
     if($method=='GET') {
-        show_piece($x, $y, $input['token']);
+        show_piece($x, $y, $input['token'], $p_num);
     } else if ($method=='PUT') {
-        move_piece($x,$y,$input['x'],$input['y'], $input['token']);
+        move_piece($x,$y,$input['x'],$input['y'], $input['token'], $p_num);
     }
 }
 ?>
