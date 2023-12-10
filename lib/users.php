@@ -38,14 +38,15 @@ function show_user($b) {
 function set_user($b,$input) {//$b = color, $input holds username in array index [username]
 	if(!isset($input['username']) || $input['username']=='') {
 		header("HTTP/1.1 400 Bad Request");
-		print json_encode(['errormesg'=>"No username given!"]);
+		print json_encode(['errormesg'=>"No username given."]);
 		exit;
 	}
 
 	$username = $input['username'];
-
-	//checks if a color is already given to a player
+	
 	global $mysqli;
+	
+	//checks if a color is already given to a player
 	$sql = 'select count(*) as c from players where p_color=? and username is not null';
 	$st = $mysqli->prepare($sql);
 	$st->bind_param('s',$b);
@@ -63,6 +64,8 @@ function set_user($b,$input) {//$b = color, $input holds username in array index
 	$st2 = $mysqli->prepare($sql);
 	$st2->bind_param('sss',$username,$username,$b);
 	$st2->execute();
+
+	update_game_status();//Function from gamestat.php
 
 	$sql = 'select * from players where p_color=?';
 	$st = $mysqli->prepare($sql);

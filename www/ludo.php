@@ -91,4 +91,13 @@ function handle_player($method, $p, $input) {
         break;
 	}
 }
+
+//you need to pass p_num, check out if $input can be used
+function handle_piece($method, $x, $y, $input) {
+    if($method=='GET') {
+        show_piece($x, $y, $input['token']);
+    } else if ($method=='PUT') {
+        move_piece($x,$y,$input['x'],$input['y'], $input['token']);
+    }
+}
 ?>
