@@ -1,0 +1,11 @@
+#ludo_table td {
+    width: 2em;
+    height: 2em;
+    border: 1px solid grey;
+    text-align: center;
+}
+
+#ludo_table {
+    border-collapse: collapse;
+}
+
