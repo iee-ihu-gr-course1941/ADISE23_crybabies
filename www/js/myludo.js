@@ -55,12 +55,11 @@ function throw_dice() {
 /*since we will chose which pieces to highlight, the player can't chose an "illegal" piece, therefore 
 when an onclick() event occurs (assuming on a legal piece) we can swoop in and calculate the steps 
 it will make. The remaining logic will be handled by php through do_move(). example_function() will
-calculate steps and also MAYBE handle sleeping => start_square*/
+calculate steps and also MAYBE handle sleeping => start_square && final*/
 
-function example_function(x1,y1,p_num,color,sql_sum){
-    var clicked_piece_coordinates = COORDINATES_MAP.coordinatesToKey[`${x1}.${y1}`];
-
-    if(sql_sum == null){
+function example_function(x1,y1,p_num,color,sql_steps){
+    var current_position = COORDINATES_MAP.coordinatesToKey[`${x1}.${y1}`];
+    if(sql_steps == null){
         switch (color){
             case G:
                 var start_position = 19;
@@ -75,20 +74,48 @@ function example_function(x1,y1,p_num,color,sql_sum){
                 var start_position = 1;
                 break;
         }
-        var x2 = COORDINATES_MAP.keyToCoordinates[start_position];
-
-        do_move(x1,y1,x2,y2,p_num);
+        var x2y2 = COORDINATES_MAP.keyToCoordinates[start_position];
+        sql_steps = 1;
+        do_move(x1,y1,x2y2[0],x2y2[1],p_num,sql_steps);
     }else{
-
+        var total_steps = sql_steps + dice_output;
+        if(total_steps < 35){
+            var new_position = current_position + total_steps;
+            var x2y2 = COORDINATES_MAP.keyToCoordinates[new_position];
+            do_move(x1,y1,x2y2[0],x2y2[1],p_num,sql_steps);
+        }else{
+            var steps_to_final = (total_steps - 35);
+            switch (color){
+                case G:
+                    var finish_position = 304;
+                    break;
+                case Y:
+                    var finish_position = 404;
+                    break;
+                case B:
+                    var finish_position = 204;
+                    break;
+                case R:
+                    var finish_position = 104;
+                    break;
+            }
+            if(steps_to_final >=4){
+                var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + 3];
+                do_move(x1,y1,x2y2[0],x2y2[1],p_num,sql_steps);
+            }else{
+                var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + steps_to_final];
+                do_move(x1,y1,x2y2[0],x2y2[1],p_num,sql_steps);
+            }
+        }
     }
 }
 
-function do_move(x1,y1,x2,y2,p_num,sql_sum) {
+function do_move(x1,y1,x2,y2,p_num,sql_steps) {
 	$.ajax({url: "ludo.php/board/piece/" + x1 + '/' + y1,//anything we put here, will end up in the link
 			method: 'PUT',
 			dataType: "json",
 			contentType: 'application/json',
-			data: JSON.stringify( {x: x2, y: y2, p_num: p_num, sum: sql_sum}),//anything we put here, will end up in the input array
+			data: JSON.stringify( {x: x2, y: y2, p_num: p_num, steps: sql_steps}),//anything we put here, will end up in the input array
 			headers: {"X-Token": me.token},
 			success: move_result,
 			error: login_error});
