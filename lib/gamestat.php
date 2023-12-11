@@ -74,7 +74,7 @@ function update_game_status() {//rename the st variables, globaly
 
 function check_abort() {
 	global $mysqli;
-	$sql = "update game_status set status='aborted', result_1=(select p_color from players where username is not null),p_turn=null,result_2=null,result_3=null where status='started' and logged='1'"
+	$sql = "update game_status set status='aborted', result_1=(select p_color from players where username is not null),p_turn=null,result_2=null,result_3=null where status='started' and logged='1'";
 	$st = $mysqli->prepare($sql);
 	$r = $st->execute();
 }

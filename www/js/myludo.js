@@ -1,3 +1,8 @@
+$(function() {
+    draw_empty_board();
+    fill_board();
+})
+
 function draw_empty_board() {
     var t = '<table id="ludo_table">';
     for(var i=1;i<12;i++) {
@@ -10,9 +15,7 @@ function draw_empty_board() {
     t += '</table>';
     $('#ludo_board').html(t);
 }
-$(draw_empty_board);
 
-/*
 function fill_board() {
     $.ajax(
             {url: "ludo.php/board/",
@@ -25,10 +28,9 @@ function fill_board_by_data(data) {
     for(var i=0;i<data.length;i++) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
-        //var c = (o.piece!=null)?o.piece_color + o.piece:'';
-        //var im = c;
+        var c = (o.piece!=null)?o.piece_color + o.piece:'';
+        var im = c;
         //var im = (o.piece!=null)?'<img class="piece" src="images/'+c+'.png">':'';
-        //$(id).addClass(o.b_color+'_square').html(im);
+        $(id).addClass(o.b_color+'_square').html(im);
     }
 }
-    */
