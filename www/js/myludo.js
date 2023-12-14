@@ -41,21 +41,32 @@ function fill_board_by_data(data) {
     }
 }
 
+function get_sql_sum(x1,y1,p_num,color) {
+    $.ajax({url: "ludo.php/pawns/",
+        method: 'POST',
+        dataType: "json",
+        contentType: 'application/json',
+        data: JSON.stringify( {p_num: p_num}),//anything we put here, will end up in the input array
+        headers: {"X-Token": me.token},
+        success: function(data) {
+            example_function(x1,y1,p_num,color,data.sum);//maybe .sum wont work, we see
+        }
+    }
+    );
+}
+
 function throw_dice() {
     dice_output = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
     if(dice_output == 6){
         //highlight all pieces that can be moved with 6
-        //..
+        //player selects a piece..
+        get_sql_sum(x1,y1,p_num,color);
     }else{
         //highlight all pieces that can be moved with any other number
-        //..
+        //player selects a piece..
+        get_sql_sum(x1,y1,p_num,color);
     }
 }
-
-/*since we will chose which pieces to highlight, the player can't chose an "illegal" piece, therefore 
-when an onclick() event occurs (assuming on a legal piece) we can swoop in and calculate the steps 
-it will make. The remaining logic will be handled by php through do_move(). example_function() will
-calculate steps and also MAYBE handle sleeping => start_square && final*/
 
 function example_function(x1,y1,p_num,color,sql_steps){
     var current_position = COORDINATES_MAP.coordinatesToKey[`${x1}.${y1}`];

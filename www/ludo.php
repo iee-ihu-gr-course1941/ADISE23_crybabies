@@ -28,8 +28,8 @@ switch ($r = array_shift($request)) {
                 handle_board($method);//
             break;
             
-            case 'piece'://this needs p_num to be added sometime
-                handle_piece($method, $request[0],$request[1],$input);
+            case 'piece':
+                handle_piece($method, $request[0], $request[1], $input);
             break;;
 	        
             default: 
@@ -47,7 +47,11 @@ switch ($r = array_shift($request)) {
 	break;
 	
     case 'players': //if the first element is 'players'
-        handle_player($method,$request,$input);
+        handle_player($method, $request, $input);
+    break;
+
+    case 'pawns': //if the first element is 'pawns'
+        handle_pawns($method, $input);
     break;
 
 	default:  
@@ -76,9 +80,18 @@ function handle_status($method) {
     }
 }
 
+//meeds more parameters to match show_sql_sum()
+function handle_pawns($method, $input) {
+    if($method=='GET') {
+        show_sql_sum($input['token'],$input['p_num']);//function from pawns.php
+    } else {
+        header('HTTP/1.1 405 Method Not Allowed');
+    }
+}
+
 //sets a new user to the SQL server or gets info for a user if he exists
 function handle_player($method, $p, $input) {
-    switch ($b=array_shift($p)) {
+    switch ($b = array_shift($p)) {
         case 'R': 
         case 'B':
         case 'G':
@@ -93,12 +106,11 @@ function handle_player($method, $p, $input) {
 	}
 }
 
-//you need to pass p_num, check out if $input can be used
-function handle_piece($method, $x, $y, $input, $p_num) {
+function handle_piece($method, $x, $y, $input) {
     if($method=='GET') {
-        show_piece($x, $y, $input['token'], $p_num);
+        show_piece($x, $y);
     } else if ($method=='PUT') {
-        move_piece($x,$y,$input['x'],$input['y'], $input['token'], $p_num);
+        move_piece($x, $y, $input['x'], $input['y'], $input['token'], $input['p_num'], $input['steps']);
     }
 }
 ?>
