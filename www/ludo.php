@@ -3,6 +3,7 @@ require_once "../lib/dbconnect.php";
 require_once "../lib/gamestat.php";
 require_once "../lib/board.php";
 require_once "../lib/users.php";
+require_once "../lib/pawns.php";
 
 $method = $_SERVER['REQUEST_METHOD'];//which method is used, POST,GET,PUT...
 $request = explode('/', trim($_SERVER['PATH_INFO'],'/'));//trims path (link) at every '/'
@@ -30,7 +31,7 @@ switch ($r = array_shift($request)) {
             
             case 'piece':
                 handle_piece($method, $request[0], $request[1], $input);
-            break;;
+            break;
 	        
             default: 
                 header("HTTP/1.1 404 Not Found");
@@ -52,6 +53,10 @@ switch ($r = array_shift($request)) {
 
     case 'pawns': //if the first element is 'pawns'
         handle_pawns($method, $input);
+    break;
+
+    case 'piece':
+        handle_piece2($method);
     break;
 
 	default:  
@@ -107,10 +112,16 @@ function handle_player($method, $p, $input) {
 }
 
 function handle_piece($method, $x, $y, $input) {
-    if($method=='GET') {
-        show_piece($x, $y);
-    } else if ($method=='PUT') {
+    if ($method=='PUT') {
         move_piece($x, $y, $input['x'], $input['y'], $input['token'], $input['p_num'], $input['steps']);
+    }
+}
+
+function handle_piece2($method) {
+    if($method=='GET') {
+        show_piece();
+    } else {
+        header('HTTP/1.1 405 Method Not Allowed');
     }
 }
 ?>

@@ -1,7 +1,7 @@
 #ludo_table td {
     width: 2em;
     height: 2em;
-    border: 1px solid grey;
+    border: 0.5px solid rgb(193, 213, 210);
     text-align: center;
 }
 
@@ -9,20 +9,52 @@
     border-collapse: collapse;
 }
 
-TD.B_square {background-color:blue;}
+TD.B_square {background-color:blue}
 TD.R_square {background-color:red}
 TD.G_square {background-color:green}
 TD.Y_square {background-color:yellow}
 TD.W_square {background-color:white}
 
-TD.S_square {background-color:magenta}
-TD.S_B_square {background-color:maroon}
-TD.S_R_square {background-color:maroon}
-TD.S_G_square {background-color:maroon}
-TD.S_Y_square {background-color:maroon}
+TD.S_square {
+    background-color: rgb(170, 136, 170);
+    opacity: 0.5;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    position: absolute;
+}
 
-TD.BG_square {background-color:white}
-TD.GY_square {background-color:white}
-TD.RB_square {background-color:white}
-TD.YR_square {background-color:white}
-TD.RBGY_square {background-color:white}
+TD.S_B_square{
+    background-color: blue;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    position: absolute;
+}
+TD.S_R_square {
+    background-color:red;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    position: absolute;
+}
+TD.S_G_square {
+    background-color:green;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    position: absolute;
+}
+TD.S_Y_square {
+    background-color:yellow;
+    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+    position: absolute;
+}
+
+TD.BG_square {
+    background: linear-gradient(to bottom left, green 50%, blue 50%);
+}
+TD.GY_square {
+    background: linear-gradient(to bottom right, green 50%, yellow 50%);
+}
+TD.RB_square {
+    background: linear-gradient(to bottom right, blue 50%, red 50%);
+}
+TD.YR_square {
+    background: linear-gradient(to bottom left, yellow 50%, red 50%);
+}
+TD.RBGY_square {
+    background: conic-gradient(green 0deg 45deg, yellow 45deg 135deg, red 135deg 225deg, blue 225deg 315deg, green 315deg 360deg);
+}

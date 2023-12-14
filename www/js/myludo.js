@@ -4,7 +4,8 @@ var dice_output = null;
 
 $(function() {
     draw_empty_board();
-    fill_board();
+    draw_board();
+    draw_pawns();
 
     $('#dice').click( throw_dice );
 })
@@ -22,22 +23,38 @@ function draw_empty_board() {
     $('#ludo_board').html(t);
 }
 
-function fill_board() {
+function draw_board() {
     $.ajax(
             {url: "ludo.php/board/",
-            success: fill_board_by_data
+            method: 'GET',
+            success: draw_board_by_data
             }
         );
 }
 
-function fill_board_by_data(data) {
+function draw_board_by_data(data) {
     for(var i=0;i<data.length;i++) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
-        var c = (o.piece!=null)?o.piece_color + o.piece:'';
-        var im = c;
-        //var im = (o.piece!=null)?'<img class="piece" src="images/'+c+'.png">':'';
-        $(id).addClass(o.b_color+'_square').html(im);
+        $(id).addClass(o.b_color+'_square');
+    }
+}
+
+function draw_pawns() {
+    $.ajax(
+            {url: "ludo.php/piece/",
+            method: 'GET',
+            success: draw_pawns_by_data
+            }
+        );
+}
+
+function draw_pawns_by_data(data) {
+    for(var i=0;i<data.length;i++) {
+        var o = data[i];
+        var id = '#square_'+ o.x +'_' + o.y;
+        var c = (o.p_num!=null)?o.p_color + o.p_num:'';
+        $(id).html(c);
     }
 }
 

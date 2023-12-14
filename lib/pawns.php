@@ -11,12 +11,10 @@ function show_sql_sum($token,$p_num) {
 	return($sum);
 }
 
-function show_piece($x,$y) {
-	$color = current_color($token);
+function show_piece() {
 	global $mysqli;
-	$sql = 'select * from pawns where x=? and y=?';
+	$sql = 'select * from pawns_empty';
 	$st = $mysqli->prepare($sql);
-	$st->bind_param('ii', $x, $y);
 	$st->execute();
 	$res = $st->get_result();
 	header('Content-type: application/json');
