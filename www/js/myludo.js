@@ -15,7 +15,7 @@ function draw_empty_board() {
     for(var i=1;i<12;i++) {
         t += '<tr>';
         for(var j=1;j<12;j++) {
-            t += '<td class="ludo_square" id="square_'+i+'_'+j+'">' + i +','+j+'</td>'; 
+            t += '<td class="ludo_square" id="square_'+i+'_'+j+'"> </td>'; 
         }
         t+='</tr>';
     }
@@ -53,9 +53,20 @@ function draw_pawns_by_data(data) {
     for(var i=0;i<data.length;i++) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
-        var c = (o.p_num!=null)?o.p_color + o.p_num:'';
+        var c = '<img id="piece_'+o.p_color+'_'+o.p_num+'" src="images/'+o.p_color+'.png" width="25" height="25">';
         $(id).html(c);
+        $(id).click(clicked);
     }
+}
+
+function clicked(e){
+    var o = e.target.id;  //dinei to id tou img
+    var a = o.split(/_/);
+
+    var o2 = e.currentTarget.id;  //dinei to id tou keliou
+    var b = o2.split(/_/);
+    window.alert(a[1] + ' ' + a[2] + " x="+ b[1]+ "y=" +b[2]);  //shows which pawn you clicked and the keli x y that the pawn is located in
+    //btw an allajeis thesi ena pioni kai meta to kaneis click ta x y allazoun sthn twrinh thesi opote einai etoimo
 }
 
 function get_sql_sum(x1,y1,p_num,color) {

@@ -3,58 +3,60 @@
     height: 2em;
     border: 0.5px solid rgb(193, 213, 210);
     text-align: center;
+    background-position: center;
+    background-size: contain;
+    position: relative;
 }
 
 #ludo_table {
     border-collapse: collapse;
 }
 
-TD.B_square {background-color:blue}
-TD.R_square {background-color:red}
-TD.G_square {background-color:green}
-TD.Y_square {background-color:yellow}
+TD.B_square {background-color:rgb(1, 53, 147)}
+TD.R_square {background-color:rgb(180, 0, 0)}
+TD.G_square {background-color:rgb(1, 75, 0)}
+TD.Y_square {background-color:rgb(255, 204, 0)}
 TD.W_square {background-color:white}
 
 TD.S_square {
-    background-color: rgb(170, 136, 170);
-    opacity: 0.5;
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    position: absolute;
+    background-image: url("../images/stars.png");
+    height: fit-content;
+    background-repeat: no-repeat;
 }
 
 TD.S_B_square{
-    background-color: blue;
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    position: absolute;
+    background-image: url("../images/B_star.png");
+    height: fit-content;
+    background-repeat: no-repeat;
 }
 TD.S_R_square {
-    background-color:red;
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    position: absolute;
+    background-image: url("../images/R_star.png");
+    height: fit-content;
+    background-repeat: no-repeat;
 }
 TD.S_G_square {
-    background-color:green;
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    position: absolute;
+    background-image: url("../images/G_star.png");
+    height: fit-content;
+    background-repeat: no-repeat;
 }
 TD.S_Y_square {
-    background-color:yellow;
-    clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-    position: absolute;
+    background-image: url("../images/Y_star.png");
+    height: fit-content;
+    background-repeat: no-repeat;
 }
 
 TD.BG_square {
-    background: linear-gradient(to bottom left, green 50%, blue 50%);
+    background: linear-gradient(to bottom left, rgb(1, 75, 0) 50%, rgb(1, 53, 147) 50%);
 }
 TD.GY_square {
-    background: linear-gradient(to bottom right, green 50%, yellow 50%);
+    background: linear-gradient(to bottom right, rgb(1, 75, 0) 50%, rgb(255, 204, 0) 50%);
 }
 TD.RB_square {
-    background: linear-gradient(to bottom right, blue 50%, red 50%);
+    background: linear-gradient(to bottom right, rgb(1, 53, 147) 50%, rgb(180, 0, 0) 50%);
 }
 TD.YR_square {
-    background: linear-gradient(to bottom left, yellow 50%, red 50%);
+    background: linear-gradient(to bottom left, rgb(255, 204, 0) 50%, rgb(180, 0, 0) 50%);
 }
 TD.RBGY_square {
-    background: conic-gradient(green 0deg 45deg, yellow 45deg 135deg, red 135deg 225deg, blue 225deg 315deg, green 315deg 360deg);
+    background: conic-gradient(rgb(1, 75, 0) 0deg 45deg, rgb(255, 204, 0) 45deg 135deg, rgb(180, 0, 0) 135deg 225deg, rgb(1, 53, 147) 225deg 315deg, rgb(1, 75, 0) 315deg 360deg);
 }
