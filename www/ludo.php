@@ -30,7 +30,7 @@ switch ($r = array_shift($request)) {
             break;
             
             case 'piece':
-                handle_piece($method, $request[0], $request[1], $input);
+                piece_move($method, $input);
             break;
 	        
             default: 
@@ -51,12 +51,16 @@ switch ($r = array_shift($request)) {
         handle_player($method, $request, $input);
     break;
 
-    case 'pawns': //if the first element is 'pawns'
-        handle_pawns($method, $input);
+    case 'psum': //if the first element is 'pawns'
+        handle_piece($method, $input);
     break;
 
-    case 'piece':
-        handle_piece2($method);
+    case 'pawns'://this and pawns need to change names, this one returns all the pawns while "pawns" returns 1 single piece
+        handle_pawns($method);
+    break;
+
+    case 'p_pieces':
+        handle_pieces($method,$request);
     break;
 
 	default:  
@@ -86,7 +90,7 @@ function handle_status($method) {
 }
 
 //meeds more parameters to match show_sql_sum()
-function handle_pawns($method, $input) {
+function handle_piece($method, $input) {
     if($method=='GET') {
         show_sql_sum($input['token'],$input['p_num']);//function from pawns.php
     } else {
@@ -111,13 +115,24 @@ function handle_player($method, $p, $input) {
 	}
 }
 
-function handle_piece($method, $x, $y, $input) {
-    if ($method=='PUT') {
-        move_piece($x, $y, $input['x'], $input['y'], $input['token'], $input['p_num'], $input['steps']);
+function handle_pieces($method, $color){
+    if($method=='GET') {
+        $a = array_shift($color);
+        show_pieces($a);
+    } else {
+        header('HTTP/1.1 405 Method Not Allowed');
     }
 }
 
-function handle_piece2($method) {
+function piece_move($method, $input) {
+    if ($method=='PUT') {
+        move_piece($input['x'], $input['y'], $input['token'], $input['p_num'], $input['steps']);
+    } else {
+        header('HTTP/1.1 405 Method Not Allowed');
+    }
+}
+
+function handle_pawns($method) {
     if($method=='GET') {
         show_piece();
     } else {

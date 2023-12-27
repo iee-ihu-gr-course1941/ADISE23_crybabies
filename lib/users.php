@@ -16,7 +16,7 @@ function current_color($token) {
 	return(null);
 }
 
-function handle_user($method, $b,$input) {
+function handle_user($method, $b, $input) {
 	if($method=='GET') {
 		show_user($b);
 	} else if($method=='PUT') {
