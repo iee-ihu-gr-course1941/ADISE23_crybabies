@@ -3,7 +3,7 @@ function show_sql_sum($color,$num) {
 	global $mysqli;
 	$sql = 'select * from pawns where p_color=? and p_num=?';
 	$st = $mysqli->prepare($sql);
-	$st->bind_param('ss', $color, $num);
+	$st->bind_param('si', $color, $num);
 	$st->execute();
 	$res = $st->get_result();
 	header('Content-type: application/json');
@@ -70,31 +70,36 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
 		$st3->bind_param('ii',$x2,$y2 );
         $st3->execute();
         $res3 = $st3->get_result();
+		$existing_color = $res3->fetch_assoc();
 
         $st4 = $mysqli->prepare('select b_fun from board where x=? and y=?');
 		$st4->bind_param('ii',$x2,$y2 );
         $st4->execute();
         $res4 = $st4->get_result();
+		$block_function = $res4->fetch_assoc();
         
-        if(res3 == $color || res4 == "S" || substr($res4, -6) === '_start'){//if, piece colors match or the square has special features
+        if($existing_color['p_color'] == $color || $block_function['b_fun'] == "S" || substr($block_function['b_fun'], -5) === '_start'){//if, piece colors match or the square has special features
             do_move($x2,$y2,$p_num,$color,$steps);//move new piece alongside
         }else{//else, the existing piece is not the same color and the square has no safe features, the existing piece has to be replaced
-			$st6 = $mysqli->prepare('select p_num from pawns where x=? and y=?');
-			$st6->bind_param('ii',$x2,$y2 );
-			$st6->execute();
-			$res6 = $st6->get_result();
+			$st5 = $mysqli->prepare('select p_num from pawns where x=? and y=?');
+			$st5->bind_param('ii',$x2,$y2 );
+			$st5->execute();
+			$res5 = $st5->get_result();
+			$existing_p_num['p_num'] = $res5->fetch_assoc();
 
 			$st6 = $mysqli->prepare('select x from pawns_empty where p_color=? and p_num=?');
-			$st6->bind_param('ii',$res3,$res6 );
+			$st6->bind_param('si',$existing_color['p_color'],$existing_p_num['p_num']);
 			$st6->execute();
-			$xsleep = $st6->get_result();
+			$res6 = $st6->get_result();
+			$xsleep['x'] = $res6->fetch_assoc();
 
-			$st6 = $mysqli->prepare('select y from pawns_empty p_color=? and p_num=?');
-			$st6->bind_param('ii',$res3,$res6 );
-			$st6->execute();
-			$ysleep = $st6->get_result();
+			$st7 = $mysqli->prepare('select y from pawns_empty p_color=? and p_num=?');
+			$st7->bind_param('si',$existing_color['p_color'],$existing_p_num['p_num']);
+			$st7->execute();
+			$res7 = $st7->get_result();
+			$ysleep['y'] = $res7->fetch_assoc();
 
-            do_move($xsleep,$ysleep,$res6,$res3,$steps);//move old piece
+            do_move($xsleep['x'],$ysleep['y'],$existing_p_num['p_num'],$existing_color['p_color'],$steps);//move old piece
 
 			do_move($x2,$y2,$p_num,$color,$steps);//move new piece
         }

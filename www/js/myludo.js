@@ -167,14 +167,14 @@ function get_sql_sum(x1,y1,p_num,color) {
     $.ajax({url: "ludo.php/psum/" + color + "/" + p_num,
         method: 'GET',
         success: function(data) {
-            example_function(x1,y1,p_num,color,data[4]);//maybe .sum wont work, we see
+            example_function(x1,y1,p_num,color,data[0].sum);
         }
     });
 }
 
 function throw_dice() {
-    //dice_output = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
-    dice_output = 6;
+    dice_output = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+    //dice_output = 6;
     switch (game_status.p_turn){
         case 'G':
             //clear all onclicks
@@ -216,9 +216,9 @@ function example_function(x1,y1,p_num,color,sql_steps){
     }else{
         var total_steps = sql_steps + dice_output;
         if(total_steps < 35){
-            var new_position = current_position + total_steps;
+            var new_position = (current_position + total_steps)-1;
             var x2y2 = COORDINATES_MAP.keyToCoordinates[new_position];
-            do_move(x2y2[0],x2y2[1],p_num,sql_steps);
+            do_move(x2y2[0],x2y2[1],p_num,total_steps);
         }else{
             var steps_to_final = (total_steps - 35);
             switch (color){
@@ -237,10 +237,10 @@ function example_function(x1,y1,p_num,color,sql_steps){
             }
             if(steps_to_final >=4){
                 var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + 3];
-                do_move(x2y2[0],x2y2[1],p_num,sql_steps);
+                do_move(x2y2[0],x2y2[1],p_num,total_steps);
             }else{
                 var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + steps_to_final];
-                do_move(x2y2[0],x2y2[1],p_num,sql_steps);
+                do_move(x2y2[0],x2y2[1],p_num,total_steps);
             }
         }
     }
@@ -319,7 +319,7 @@ function update_status(data) {
 }
 
 function update_info(){
-	$('#game_info').html("I am Player: " + me.piece_color + 
+	$('#game_info').html("I am Player: " + me.p_color + 
     ", my name is " + me.username 
     + '<br>Token=' + me.token 
     + '<br>Game state: ' 
@@ -327,6 +327,8 @@ function update_info(){
     + ', ' 
     + game_status.p_turn 
     + ' must play now.');
+
+    $('#dice_info').html("DICE : " + dice_output);
 }
 
 //here if do_move doesnt detect an issue the game continues
