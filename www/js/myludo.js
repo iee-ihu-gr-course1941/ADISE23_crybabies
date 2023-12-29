@@ -163,23 +163,18 @@ function clicked(e){
     get_sql_sum(b[1],b[2],a[2],a[1]);
 }
 
-//here token based color aquirement may be stupid and we may change it
 function get_sql_sum(x1,y1,p_num,color) {
-    $.ajax({url: "ludo.php/psum/",
-        method: 'POST',
-        dataType: "json",
-        contentType: 'application/json',
-        data: JSON.stringify( {p_num: p_num}),//anything we put here, will end up in the input array
-        headers: {"X-Token": me.token},
+    $.ajax({url: "ludo.php/psum/" + color + "/" + p_num,
+        method: 'GET',
         success: function(data) {
-            example_function(x1,y1,p_num,color,data.sum);//maybe .sum wont work, we see
+            example_function(x1,y1,p_num,color,data[4]);//maybe .sum wont work, we see
         }
-    }
-    );
+    });
 }
 
 function throw_dice() {
-    dice_output = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+    //dice_output = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
+    dice_output = 6;
     switch (game_status.p_turn){
         case 'G':
             //clear all onclicks
@@ -198,7 +193,6 @@ function throw_dice() {
     }
 }
 
-//maybe make dice_output a parameter just to be sure, now its a global variable
 function example_function(x1,y1,p_num,color,sql_steps){
     var current_position = COORDINATES_MAP.coordinatesToKey[`${x1}.${y1}`];
     if(sql_steps == null){
@@ -253,12 +247,12 @@ function example_function(x1,y1,p_num,color,sql_steps){
 }
 
 function do_move(x2,y2,p_num,sql_steps) {
-	$.ajax({url: "ludo.php/board/piece/",
+	$.ajax({url: "ludo.php/board/piece/"+x2+"/"+y2+"/"+p_num+"/"+sql_steps+"/"+me.token,
 			method: 'PUT',
 			dataType: "json",
+            headers: {"X-Token": me.token},
 			contentType: 'application/json',
-			data: JSON.stringify( {x: x2, y: y2, p_num: p_num, steps: sql_steps}),//anything we put here, will end up in the input array
-			headers: {"X-Token": me.token},
+            data: JSON.stringify( {x: x2, y: y2, p_num: p_num, steps: sql_steps}),//anything we put here, will end up in the input array
 			success: move_result,
 			error: login_error
         });
@@ -305,6 +299,7 @@ function game_status_update() {
 function update_status(data) {
 	last_update = new Date().getTime();
 	//var game_stat_old = game_status;
+    draw_pawns();
 	game_status = data[0];
 	update_info();
 	clearTimeout(timer);
@@ -337,20 +332,4 @@ function update_info(){
 //here if do_move doesnt detect an issue the game continues
 //if for example it finds 2 pawns already living in a square
 //it will return a error we will catch here and make the player
-//play again, in this fashion i guess somewhere in the code we 
-//need a refresh board timer that updates the screen when something
-//changes
 function move_result(data){}
-/*------------------------------test zone-------------------------------*/
-//these are a test to see how the MAP works, what you input and it outputs
-const coordinatesForKey = COORDINATES_MAP.keyToCoordinates[1];
-console.log("POSITION 1 corresponds to : " + coordinatesForKey);
-//this retuns an array, look at the following CLEAN response
-const coordinatesForKey2 = COORDINATES_MAP.keyToCoordinates[2];
-console.log(coordinatesForKey2);
-
-var x1=6;
-var y1=12;
-//making this part accept an array as input [x,y] is a pain so we will write it as x.y, like a float
-const keyForCoordinates = COORDINATES_MAP.coordinatesToKey[`${x1}.${y1}`];
-console.log("6.13 corresponds to : "+keyForCoordinates);

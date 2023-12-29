@@ -1,14 +1,13 @@
 <?php
-function show_sql_sum($token,$p_num) {
-	$color = current_color($token);
+function show_sql_sum($color,$num) {
 	global $mysqli;
 	$sql = 'select * from pawns where p_color=? and p_num=?';
 	$st = $mysqli->prepare($sql);
-	$st->bind_param('ii', $color, $p_num);
+	$st->bind_param('ss', $color, $num);
 	$st->execute();
 	$res = $st->get_result();
-	$sum = $res->fetch_assoc();
-	return($sum);
+	header('Content-type: application/json');
+	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 }
 
 function show_pieces($p_color) {
@@ -24,7 +23,7 @@ function show_pieces($p_color) {
 
 function show_piece() {
 	global $mysqli;
-	$sql = 'select * from pawns_empty';
+	$sql = 'select * from pawns';
 	$st = $mysqli->prepare($sql);
 	$st->execute();
 	$res = $st->get_result();
@@ -32,7 +31,8 @@ function show_piece() {
 	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 }
 
-function move_piece($x2,$y2,$token,$p_num,$steps){
+function move_piece($x2,$y2,$p_num,$steps,$token){
+	global $mysqli;
     if($token==null || $token=='') {
 		header("HTTP/1.1 400 Bad Request");
 		print json_encode(['errormesg'=>"Token is not set."]);
@@ -65,7 +65,7 @@ function move_piece($x2,$y2,$token,$p_num,$steps){
 	$res2 = $st2->get_result();
 	$population = $res2->fetch_assoc()['population'];
 
-	if($population > 0 && population < 2){//if population is 1
+	if($population > 0 && $population < 2){//if population is 1
         $st3 = $mysqli->prepare('select p_color from pawns where x=? and y=?');
 		$st3->bind_param('ii',$x2,$y2 );
         $st3->execute();
@@ -98,7 +98,7 @@ function move_piece($x2,$y2,$token,$p_num,$steps){
 
 			do_move($x2,$y2,$p_num,$color,$steps);//move new piece
         }
-    }else if(population >= 2){//if pionia are 2 akrivos
+    }else if($population >= 2){//if pionia are 2 akrivos
         //throw dice again or chose another piece
     }else{
         do_move($x2,$y2,$p_num,$color,$steps);//move new piece
@@ -107,11 +107,10 @@ function move_piece($x2,$y2,$token,$p_num,$steps){
 
 function do_move($x2,$y2,$p_num,$color,$steps) {
 	global $mysqli;
-	$sql = 'call `move_piece`(?,?,?,?,?,?,?);';
+	$sql = 'call `move_piece`(?,?,?,?,?);';
 	$st = $mysqli->prepare($sql);
-	$st->bind_param('iiii',$x2,$y2,$p_num,$color,$steps);
+	$st->bind_param('iiisi',$x2,$y2,$p_num,$color,$steps);
 	$st->execute();
-
 	header('Content-type: application/json');
 	print json_encode(read_board(), JSON_PRETTY_PRINT);
 }

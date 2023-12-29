@@ -30,7 +30,7 @@ switch ($r = array_shift($request)) {
             break;
             
             case 'piece':
-                piece_move($method, $input);
+                piece_move($method, $input, $request);
             break;
 	        
             default: 
@@ -52,7 +52,7 @@ switch ($r = array_shift($request)) {
     break;
 
     case 'psum': //if the first element is 'pawns'
-        handle_piece($method, $input);
+        handle_piece($method, $request);
     break;
 
     case 'pawns'://this and pawns need to change names, this one returns all the pawns while "pawns" returns 1 single piece
@@ -90,9 +90,11 @@ function handle_status($method) {
 }
 
 //meeds more parameters to match show_sql_sum()
-function handle_piece($method, $input) {
+function handle_piece($method, $p) {
     if($method=='GET') {
-        show_sql_sum($input['token'],$input['p_num']);//function from pawns.php
+        $p_color = array_shift($p);
+        $p_num = array_shift($p);
+        show_sql_sum($p_color, $p_num);//function from pawns.php
     } else {
         header('HTTP/1.1 405 Method Not Allowed');
     }
@@ -124,9 +126,14 @@ function handle_pieces($method, $color){
     }
 }
 
-function piece_move($method, $input) {
+function piece_move($method, $input, $request) {
     if ($method=='PUT') {
-        move_piece($input['x'], $input['y'], $input['token'], $input['p_num'], $input['steps']);
+        $x2 = array_shift($request);
+        $y2 = array_shift($request);
+        $p_num = array_shift($request);
+        $steps = array_shift($request);
+        $token = array_shift($request);
+        move_piece($x2,$y2,$p_num,$steps,$token);
     } else {
         header('HTTP/1.1 405 Method Not Allowed');
     }
