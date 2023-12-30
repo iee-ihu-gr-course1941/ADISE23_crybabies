@@ -151,6 +151,7 @@ function handle_pawns($method) {
 function empty_users($method) {
     if($method=='PUT') {
         reset_players();
+        reset_pawns();
     } else {
         header('HTTP/1.1 405 Method Not Allowed');
     }

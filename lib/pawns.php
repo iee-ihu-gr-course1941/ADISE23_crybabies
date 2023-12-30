@@ -119,4 +119,10 @@ function do_move($x2,$y2,$p_num,$color,$steps) {
 	header('Content-type: application/json');
 	print json_encode(read_board(), JSON_PRETTY_PRINT);
 }
+
+function reset_pawns() {
+	global $mysqli;
+	$sql = 'call clean_pawns()';
+	$mysqli->query($sql);
+}
 ?>

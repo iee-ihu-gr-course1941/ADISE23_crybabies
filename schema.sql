@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `game_status` (
 
 -- Dumping data for table ludo.game_status: ~0 rows (approximately)
 INSERT INTO `game_status` (`status`, `p_turn`, `result_1`, `result_2`, `result_3`, `last_change`, `logged`) VALUES
-	('started', 'B', NULL, NULL, NULL, '2023-12-30 11:43:53', NULL);
+	('not active', NULL, NULL, NULL, NULL, '2023-12-30 15:21:46', NULL);
 
 -- Dumping structure for procedure ludo.move_piece
 DELIMITER //
@@ -225,7 +225,7 @@ INSERT INTO `pawns` (`p_color`, `p_num`, `x`, `y`, `sum`) VALUES
 	('R', '1', 9, 2, NULL),
 	('R', '2', 9, 3, NULL),
 	('R', '3', 10, 2, NULL),
-	('R', '4', 9, 5, 2),
+	('R', '4', 10, 3, NULL),
 	('B', '1', 2, 2, NULL),
 	('B', '2', 2, 3, NULL),
 	('B', '3', 3, 2, NULL),

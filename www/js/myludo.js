@@ -15,6 +15,13 @@ $(function() {
     $('#new_game').click( restart_game );
 })
 
+$(window).bind('beforeunload', function(){
+    return "Σίγουρα θέλετε να αποχωρήσετε;";
+});
+$(window).bind('unload', function(){
+    restart_game();
+});
+
 function draw_empty_board() {
     var t = '<table id="ludo_table">';
     for(var i=1;i<12;i++) {
@@ -58,7 +65,7 @@ function draw_pawns_by_data(data) {
     for(var i=0;i<data.length;i++) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
-        var c = '<img id="piece_'+o.p_color+'_'+o.p_num+'" src="images/'+o.p_color+'.png" width="25" height="25">';
+        var c = (o.p_color!=null)?'<img id="piece_'+o.p_color+'_'+o.p_num+'" src="images/'+o.p_color+'.png" width="25" height="25">':'';
         $(id).html(c);
     }
 }
@@ -335,7 +342,14 @@ function update_info(){
 //here if do_move doesnt detect an issue the game continues
 //if for example it finds 2 pawns already living in a square
 //it will return a error we will catch here and make the player
-function move_result(data){}
+function move_result(data){
+    game_status_update();
+    try{
+        draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
+    }catch(error){
+        alert(error);
+    }
+}
 
 function restart_game() {
 	$.ajax({url: "ludo.php/users", 
