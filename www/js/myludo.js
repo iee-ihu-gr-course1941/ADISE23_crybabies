@@ -12,6 +12,7 @@ $(function() {
 
     $('#ludo_login').click( login_to_game );
     $('#dice').click( throw_dice );
+    $('#new_game').click( restart_game );
 })
 
 function draw_empty_board() {
@@ -335,3 +336,18 @@ function update_info(){
 //if for example it finds 2 pawns already living in a square
 //it will return a error we will catch here and make the player
 function move_result(data){}
+
+function restart_game() {
+	$.ajax({url: "ludo.php/users", 
+			method: 'PUT',
+            success: new_game,
+        });
+}
+
+function new_game(){
+	alert("Εκκίνηση νέου παιχνιδιού!");
+    draw_board();
+    draw_pawns();
+    $('#game_initializer').hide();
+	game_status_update();
+}

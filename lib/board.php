@@ -1,9 +1,4 @@
 <?php
-function reset_board() {
-	global $mysqli;
-	$sql = 'call clean_board()';
-	$mysqli->query($sql);
-}
 
 function read_board() {
 	global $mysqli;

@@ -178,15 +178,18 @@ CREATE TABLE IF NOT EXISTS `game_status` (
   `logged` enum('1','2','3','4') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table ludo.game_status: ~1 rows (approximately)
+-- Dumping data for table ludo.game_status: ~0 rows (approximately)
 INSERT INTO `game_status` (`status`, `p_turn`, `result_1`, `result_2`, `result_3`, `last_change`, `logged`) VALUES
-	('not active', NULL, NULL, NULL, NULL, '2023-12-04 16:00:16', NULL);
+	('started', 'B', NULL, NULL, NULL, '2023-12-30 11:43:53', NULL);
 
 -- Dumping structure for procedure ludo.move_piece
 DELIMITER //
 CREATE PROCEDURE `move_piece`(x2 TINYINT, y2 TINYINT, num CHAR, color CHAR, steps CHAR)
 BEGIN
-	UPDATE `pawns` SET X=x2, Y=y2, SUM=steps WHERE p_color=color AND p_num=num;
+	DECLARE x1,y1 TINYINT;
+	SELECT x,y INTO x1,y1 FROM `pawns` WHERE p_color=color AND p_num=num;
+	UPDATE `pawns` SET x=x2, y=y2, sum=steps WHERE p_color=color AND p_num=num;
+	UPDATE `pawns` SET p_color=NULL, p_num=NULL WHERE x=x1 AND y=y1;
 	
 	UPDATE `game_status` SET p_turn = (case 
 														WHEN color = 'R' then 'B'
@@ -195,6 +198,15 @@ BEGIN
 														WHEN color = 'Y' then 'R'
 														ELSE null
 														END);
+END//
+DELIMITER ;
+
+-- Dumping structure for procedure ludo.new_game
+DELIMITER //
+CREATE PROCEDURE `new_game`()
+BEGIN
+	DELETE FROM `players`;
+	INSERT INTO `players` VALUES (NULL,'R',NULL,NULL),(NULL,'B',NULL,NULL),(NULL,'G',NULL,NULL),(NULL,'Y',NULL,NULL);
 END//
 DELIMITER ;
 
@@ -213,7 +225,7 @@ INSERT INTO `pawns` (`p_color`, `p_num`, `x`, `y`, `sum`) VALUES
 	('R', '1', 9, 2, NULL),
 	('R', '2', 9, 3, NULL),
 	('R', '3', 10, 2, NULL),
-	('R', '4', 10, 3, NULL),
+	('R', '4', 9, 5, 2),
 	('B', '1', 2, 2, NULL),
 	('B', '2', 2, 3, NULL),
 	('B', '3', 3, 2, NULL),

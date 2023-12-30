@@ -63,6 +63,10 @@ switch ($r = array_shift($request)) {
         handle_pieces($method,$request);
     break;
 
+    case 'users':
+        empty_users($method);
+    break;
+
 	default:  
         header("HTTP/1.1 404 Not Found");
     exit;
@@ -71,10 +75,7 @@ switch ($r = array_shift($request)) {
 //checks what kind of communication we want with the API, after that it calls a function from board.php
 function handle_board($method) {
     if($method=='GET') {
-            show_board();//function from board.php
-    } else if ($method=='POST') {
-            reset_board();//function from board.php
-            show_board();//function from board.php
+        show_board();//function from board.php
     } else {
         header('HTTP/1.1 405 Method Not Allowed');
     }
@@ -142,6 +143,14 @@ function piece_move($method, $input, $request) {
 function handle_pawns($method) {
     if($method=='GET') {
         show_piece();
+    } else {
+        header('HTTP/1.1 405 Method Not Allowed');
+    }
+}
+
+function empty_users($method) {
+    if($method=='PUT') {
+        reset_players();
     } else {
         header('HTTP/1.1 405 Method Not Allowed');
     }

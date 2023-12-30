@@ -75,4 +75,10 @@ function set_user($b,$input) {//$b = color, $input holds username in array index
 	header('Content-type: application/json');
 	print json_encode($res->fetch_all(MYSQLI_ASSOC), JSON_PRETTY_PRINT);
 }
+
+function reset_players() {
+	global $mysqli;
+	$sql = 'call new_game()';
+	$mysqli->query($sql);
+}
 ?>
