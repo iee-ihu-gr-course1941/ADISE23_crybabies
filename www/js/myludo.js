@@ -182,7 +182,7 @@ function get_sql_sum(x1,y1,p_num,color) {
 
 function throw_dice() {
     dice_output = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
-    //dice_output = 6;
+    update_info();
     switch (game_status.p_turn){
         case 'G':
             //clear all onclicks
@@ -339,9 +339,6 @@ function update_info(){
     $('#dice_info').html("DICE : " + dice_output);
 }
 
-//here if do_move doesnt detect an issue the game continues
-//if for example it finds 2 pawns already living in a square
-//it will return a error we will catch here and make the player
 function move_result(data){
     game_status_update();
     try{
