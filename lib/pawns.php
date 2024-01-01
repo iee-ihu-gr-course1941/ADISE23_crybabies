@@ -33,6 +33,7 @@ function show_piece() {
 
 function move_piece($x2,$y2,$p_num,$steps,$token){
 	global $mysqli;
+	try{
     if($token==null || $token=='') {
 		header("HTTP/1.1 400 Bad Request");
 		print json_encode(['errormesg'=>"Token is not set."]);
@@ -66,6 +67,7 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
 	$population = $res2->fetch_assoc()['population'];
 
 	if($population > 0 && $population < 2){//if population is 1
+
         $st3 = $mysqli->prepare('select p_color from pawns where x=? and y=?');
 		$st3->bind_param('ii',$x2,$y2 );
         $st3->execute();
@@ -79,35 +81,42 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
 		$block_function = $res4->fetch_assoc();
         
         if($existing_color['p_color'] == $color || $block_function['b_fun'] == "S" || substr($block_function['b_fun'], -5) === '_start'){//if, piece colors match or the square has special features
-            do_move($x2,$y2,$p_num,$color,$steps);//move new piece alongside
+			do_move($x2,$y2,$p_num,$color,$steps);//move new piece alongside
         }else{//else, the existing piece is not the same color and the square has no safe features, the existing piece has to be replaced
 			$st5 = $mysqli->prepare('select p_num from pawns where x=? and y=?');
 			$st5->bind_param('ii',$x2,$y2 );
 			$st5->execute();
 			$res5 = $st5->get_result();
-			$existing_p_num['p_num'] = $res5->fetch_assoc();
+			$existing_p_num = $res5->fetch_assoc();
 
 			$st6 = $mysqli->prepare('select x from pawns_empty where p_color=? and p_num=?');
 			$st6->bind_param('si',$existing_color['p_color'],$existing_p_num['p_num']);
 			$st6->execute();
 			$res6 = $st6->get_result();
-			$xsleep['x'] = $res6->fetch_assoc();
+			$xsleep = $res6->fetch_assoc();
 
-			$st7 = $mysqli->prepare('select y from pawns_empty p_color=? and p_num=?');
+			$st7 = $mysqli->prepare('select y from pawns_empty where p_color=? and p_num=?');
 			$st7->bind_param('si',$existing_color['p_color'],$existing_p_num['p_num']);
 			$st7->execute();
 			$res7 = $st7->get_result();
-			$ysleep['y'] = $res7->fetch_assoc();
+			$ysleep = $res7->fetch_assoc();
 
-            do_move($xsleep['x'],$ysleep['y'],$existing_p_num['p_num'],$existing_color['p_color'],$steps);//move old piece
-
+            do_move($xsleep['x'],$ysleep['y'],$existing_p_num['p_num'],$existing_color['p_color'],0);//move old piece
 			do_move($x2,$y2,$p_num,$color,$steps);//move new piece
         }
+		throw new Exception('block already occupied by an idiot (also i failed getting inside if and else and im homeless and your code is trash)'); // Set your custom error message
     }else if($population >= 2){//if pionia are 2 akrivos
-        //throw dice again or chose another piece
+		$result_data = array();
+		print json_encode($result_data, JSON_PRETTY_PRINT);
+        //empty array so player can throw dice again or chose another piece
     }else{
         do_move($x2,$y2,$p_num,$color,$steps);//move new piece
     }
+} catch (Exception $e) {
+	header("HTTP/1.1 400 Bad Request");
+	print json_encode(['errormesg' => $e->getMessage()]);
+	exit;
+}
 }
 
 function do_move($x2,$y2,$p_num,$color,$steps) {

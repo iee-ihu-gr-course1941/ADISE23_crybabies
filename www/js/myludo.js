@@ -6,6 +6,7 @@ var game_status={};
 var board={};
 var last_update=new Date().getTime();
 var timer=null;
+var last_id = "";
 
 $(function() {
     draw_empty_board();
@@ -65,7 +66,15 @@ function draw_pawns_by_data(data) {
     for(var i=0;i<data.length;i++) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
-        var c = (o.p_color!=null)?'<img id="piece_'+o.p_color+'_'+o.p_num+'" src="images/'+o.p_color+'.png" width="25" height="25">':'';
+        if (id == last_id){
+            var c1 = (o.p_color != null) ? '<img id="piece_' + last_o.p_color + '_' + last_o.p_num + '" src="images/' + last_o.p_color + '.png" width="14" height="14" style="top: 0; left: 0; position: absolute;">' : '';
+            var c2 = (o.p_color != null) ? '<img id="piece_' + o.p_color + '_' + o.p_num + '" src="images/' + o.p_color + '.png" width="14" height="14" style="bottom: 0; right: 0; position: absolute;">' : '';
+            var c = c1 + c2;
+        }else{
+            var c = (o.p_color!=null) ? '<img id="piece_'+o.p_color+'_'+o.p_num+'" src="images/'+o.p_color+'.png" width="25" height="25">' : '';
+        }
+        last_id = id;
+        var last_o = o;
         $(id).html(c);
     }
 }
@@ -87,76 +96,100 @@ function piece_onclick(data) {
             $(id).click(clicked);
         }
     }else{
-            switch (game_status.p_turn){
-                case 'G':
-                    for(var i=0;i<data.length;i++) {
-                        var o = data[i];
-                        var id = '#square_'+ o.x +'_' + o.y;
-                        switch (id){
-                            case '#square_2_9':
-                            case '#square_2_10':
-                            case '#square_3_9':
-                            case '#square_3_10':
+        switch (game_status.p_turn){
+            case 'G':
+                for(var i=0;i<data.length;i++) {
+                    var o = data[i];
+                    var id = '#square_'+ o.x +'_' + o.y;
+                    switch (id){
+                        case '#square_2_9':
+                            $(id).off('click', clicked);
                             break;
-
-                            default:
-                                $(id).click(clicked);
+                        case '#square_2_10':
+                            $(id).off('click', clicked);
                             break;
-                        }
+                        case '#square_3_9':
+                            $(id).off('click', clicked);
+                            break;
+                        case '#square_3_10':
+                            $(id).off('click', clicked);
+                            break;
+                        default:
+                            $(id).click(clicked);
+                            break;
                     }
-                    break;
-                case 'Y':
-                    for(var i=0;i<data.length;i++) {
-                        var o = data[i];
-                        var id = '#square_'+ o.x +'_' + o.y;
-                        switch (id){
-                            case '#square_9_9':
-                            case '#square_9_10':
-                            case '#square_10_9':
-                            case '#square_10_10':
+                }
+                break;
+            case 'Y':
+                for(var i=0;i<data.length;i++) {
+                    var o = data[i];
+                    var id = '#square_'+ o.x +'_' + o.y;
+                    switch (id){
+                        case '#square_9_9':
+                            $(id).off('click', clicked);
                             break;
-
-                            default:
-                                $(id).click(clicked);
+                        case '#square_9_10':
+                            $(id).off('click', clicked);
                             break;
-                        }
+                        case '#square_10_9':
+                            $(id).off('click', clicked);
+                            break;
+                        case '#square_10_10':
+                            $(id).off('click', clicked);
+                            break;
+                        default:
+                            $(id).click(clicked);
+                            break;
                     }
-                    break;
-                case 'B':
-                    for(var i=0;i<data.length;i++) {
-                        var o = data[i];
-                        var id = '#square_'+ o.x +'_' + o.y;
-                        switch (id){
-                            case '#square_2_2':
-                            case '#square_2_3':
-                            case '#square_3_2':
-                            case '#square_3_3':
+                }
+                break;
+            case 'B':
+                for(var i=0;i<data.length;i++) {
+                    var o = data[i];
+                    var id = '#square_'+ o.x +'_' + o.y;
+                    switch (id){
+                        case '#square_2_2':
+                            $(id).off('click', clicked);
                             break;
-
-                            default:
-                                $(id).click(clicked);
+                        case '#square_2_3':
+                            $(id).off('click', clicked);
                             break;
-                        }
+                        case '#square_3_2':
+                            $(id).off('click', clicked);
+                            break;
+                        case '#square_3_3':
+                            $(id).off('click', clicked);
+                            break;
+                        default:
+                            $(id).click(clicked);
+                            break;
                     }
-                    break;
-                case 'R':
-                    for(var i=0;i<data.length;i++) {
-                        var o = data[i];
-                        var id = '#square_'+ o.x +'_' + o.y;
-                        switch (id){
-                            case '#square_9_2':
-                            case '#square_9_3':
-                            case '#square_10_2':
-                            case '#square_10_3':
+                }
+                break;
+            case 'R':
+                for(var i=0;i<data.length;i++) {
+                    var o = data[i];
+                    var id = '#square_'+ o.x +'_' + o.y;
+                    switch (id){
+                        case '#square_9_2':
+                            $(id).off('click', clicked);
                             break;
-
-                            default:
-                                $(id).click(clicked);
+                        case '#square_9_3':
+                            $(id).off('click', clicked);
                             break;
-                        }
+                        case '#square_10_2':
+                            $(id).off('click', clicked);
+                            break;
+                        case '#square_10_3':
+                            $(id).off('click', clicked);
+                            break;
+                        default:
+                            $(id).click(clicked);
+                            break;
                     }
-                    break;
-            }
+                }
+                break;
+        }
     }
 }
 
@@ -165,9 +198,7 @@ function clicked(e){
     var a = o.split(/_/);
     var o2 = e.currentTarget.id;  //dinei to id tou keliou
     var b = o2.split(/_/);
-    window.alert(a[1] + ' ' + a[2] + " x="+ b[1]+ "y=" +b[2]);  //shows which pawn you clicked and the keli x y that the pawn is located in
-    //btw an allajeis thesi ena pioni kai meta to kaneis click ta x y allazoun sthn twrinh thesi opote einai etoimo
-
+    //window.alert(a[1] + ' ' + a[2] + " x="+ b[1]+ "y=" +b[2]);  //shows which pawn you clicked and the keli x y that the pawn is located in
     get_sql_sum(b[1],b[2],a[2],a[1]);
 }
 
@@ -185,7 +216,6 @@ function throw_dice() {
     update_info();
     switch (game_status.p_turn){
         case 'G':
-            //clear all onclicks
             //highlight pawns
             player_pieces("G");
             break;
@@ -202,8 +232,20 @@ function throw_dice() {
 }
 
 function example_function(x1,y1,p_num,color,sql_steps){
-    var current_position = COORDINATES_MAP.coordinatesToKey[`${x1}.${y1}`];
-    if(sql_steps == null){
+        var xy = x1 + '.' + y1;
+        var coordinates = parseFloat(xy);
+    switch (coordinates){
+        case 7.10:
+            coordinates = 7.12;
+            break;
+        case 5.10:
+            coordinates = 5.12;
+            break;
+        default:
+            break;
+    }
+    var current_position = COORDINATES_MAP.coordinatesToKey[coordinates];
+    if(sql_steps == null || sql_steps == 0){
         switch (color){
             case 'G':
                 var start_position = 19;
@@ -224,8 +266,14 @@ function example_function(x1,y1,p_num,color,sql_steps){
     }else{
         var total_steps = sql_steps + dice_output;
         if(total_steps < 35){
-            var new_position = (current_position + total_steps)-1;
-            var x2y2 = COORDINATES_MAP.keyToCoordinates[new_position];
+            var new_position = (current_position + dice_output);
+            if(new_position > 36){
+                new_position -= 36;
+                var x2y2 = COORDINATES_MAP.keyToCoordinates[new_position];
+
+            }else{
+                var x2y2 = COORDINATES_MAP.keyToCoordinates[new_position];
+            }
             do_move(x2y2[0],x2y2[1],p_num,total_steps);
         }else{
             var steps_to_final = (total_steps - 35);
@@ -341,10 +389,15 @@ function update_info(){
 
 function move_result(data){
     game_status_update();
-    try{
-        draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
-    }catch(error){
-        alert(error);
+    if (data.length > 1){
+        try{
+            draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
+        }catch(error){
+            alert(error);
+        }
+    }else{
+        //
+        alert("Ωχ υπάρχουν ήδη 2 πιόνια στο κουτί, ρίξε το ζάρι ξανά ή διάλεξε νεο πιόνι!");
     }
 }
 
