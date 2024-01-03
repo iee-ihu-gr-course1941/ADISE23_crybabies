@@ -17,7 +17,7 @@ $(function() {
 })
 
 $(window).bind('beforeunload', function(){
-    return "Σίγουρα θέλετε να αποχωρήσετε;";
+    return ' ';
 });
 $(window).bind('unload', function(){
     restart_game();
@@ -410,8 +410,6 @@ function restart_game() {
 
 function new_game(){
 	alert("Εκκίνηση νέου παιχνιδιού!");
-    draw_board();
-    draw_pawns();
-    $('#game_initializer').hide();
-	game_status_update();
+    location.replace("http://localhost/MyProject/www/");
+    draw_empty_board();
 }
