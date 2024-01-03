@@ -33,7 +33,6 @@ function show_piece() {
 
 function move_piece($x2,$y2,$p_num,$steps,$token){
 	global $mysqli;
-	try{
     if($token==null || $token=='') {
 		header("HTTP/1.1 400 Bad Request");
 		print json_encode(['errormesg'=>"Token is not set."]);
@@ -79,16 +78,16 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
         $st4->execute();
         $res4 = $st4->get_result();
 		$block_function = $res4->fetch_assoc();
+
+		$st5 = $mysqli->prepare('select p_num from pawns where x=? and y=?');
+		$st5->bind_param('ii',$x2,$y2 );
+		$st5->execute();
+		$res5 = $st5->get_result();
+		$existing_p_num = $res5->fetch_assoc();
         
-        if($existing_color['p_color'] == $color || $block_function['b_fun'] == "S" || substr($block_function['b_fun'], -5) === '_start'){//if, piece colors match or the square has special features
+        if($existing_color['p_color'] == $color || $block_function['b_fun'] == "S" || substr($block_function['b_fun'], -6) === '_start'){//if, piece colors match or the square has special features
 			do_move($x2,$y2,$p_num,$color,$steps);//move new piece alongside
         }else{//else, the existing piece is not the same color and the square has no safe features, the existing piece has to be replaced
-			$st5 = $mysqli->prepare('select p_num from pawns where x=? and y=?');
-			$st5->bind_param('ii',$x2,$y2 );
-			$st5->execute();
-			$res5 = $st5->get_result();
-			$existing_p_num = $res5->fetch_assoc();
-
 			$st6 = $mysqli->prepare('select x from pawns_empty where p_color=? and p_num=?');
 			$st6->bind_param('si',$existing_color['p_color'],$existing_p_num['p_num']);
 			$st6->execute();
@@ -104,19 +103,14 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
             do_move($xsleep['x'],$ysleep['y'],$existing_p_num['p_num'],$existing_color['p_color'],0);//move old piece
 			do_move($x2,$y2,$p_num,$color,$steps);//move new piece
         }
-		throw new Exception('block already occupied by an idiot (also i failed getting inside if and else and im homeless and your code is trash)'); // Set your custom error message
     }else if($population >= 2){//if pionia are 2 akrivos
 		$result_data = array();
+		header('Content-type: application/json');
 		print json_encode($result_data, JSON_PRETTY_PRINT);
         //empty array so player can throw dice again or chose another piece
     }else{
         do_move($x2,$y2,$p_num,$color,$steps);//move new piece
     }
-} catch (Exception $e) {
-	header("HTTP/1.1 400 Bad Request");
-	print json_encode(['errormesg' => $e->getMessage()]);
-	exit;
-}
 }
 
 function do_move($x2,$y2,$p_num,$color,$steps) {
@@ -126,7 +120,7 @@ function do_move($x2,$y2,$p_num,$color,$steps) {
 	$st->bind_param('iiisi',$x2,$y2,$p_num,$color,$steps);
 	$st->execute();
 	header('Content-type: application/json');
-	print json_encode(read_board(), JSON_PRETTY_PRINT);
+	print json_encode(show_piece(), JSON_PRETTY_PRINT);
 }
 
 function reset_pawns() {

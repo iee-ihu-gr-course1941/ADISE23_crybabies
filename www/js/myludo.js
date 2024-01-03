@@ -6,7 +6,6 @@ var game_status={};
 var board={};
 var last_update=new Date().getTime();
 var timer=null;
-var last_id = "";
 
 $(function() {
     draw_empty_board();
@@ -49,6 +48,9 @@ function draw_board_by_data(data) {
     for(var i=0;i<data.length;i++) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
+        //gia na kanei refresh ta pionia
+        var c = (o.p_color!=null) ? '' : '';
+        $(id).html(c);
         $(id).addClass(o.b_color+'_square');
     }
 }
@@ -63,18 +65,18 @@ function draw_pawns() {
 }
 
 function draw_pawns_by_data(data) {
+    var seen = new Map();
     for(var i=0;i<data.length;i++) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
-        if (id == last_id){
-            var c1 = (o.p_color != null) ? '<img id="piece_' + last_o.p_color + '_' + last_o.p_num + '" src="images/' + last_o.p_color + '.png" width="14" height="14" style="top: 0; left: 0; position: absolute;">' : '';
-            var c2 = (o.p_color != null) ? '<img id="piece_' + o.p_color + '_' + o.p_num + '" src="images/' + o.p_color + '.png" width="14" height="14" style="bottom: 0; right: 0; position: absolute;">' : '';
+        if (seen.has(id)){
+            var c1 = '<img id="piece_' + data[seen.get(id)].p_color + '_' + data[seen.get(id)].p_num + '" src="images/' + data[seen.get(id)].p_color + '.png" width="14" height="14" style="top: 0; left: 0; position: absolute;">';
+            var c2 = '<img id="piece_' + o.p_color + '_' + o.p_num + '" src="images/' + o.p_color + '.png" width="14" height="14" style="bottom: 0; right: 0; position: absolute;">';
             var c = c1 + c2;
         }else{
             var c = (o.p_color!=null) ? '<img id="piece_'+o.p_color+'_'+o.p_num+'" src="images/'+o.p_color+'.png" width="25" height="25">' : '';
         }
-        last_id = id;
-        var last_o = o;
+        seen.set(id, i);
         $(id).html(c);
     }
 }
@@ -87,7 +89,7 @@ function player_pieces(p_color) {
         }
     );
 }
-
+//gotta find a solution to the .click stacking and running clicked 1000 god damn times
 function piece_onclick(data) {
     if(dice_output == 6){
         for(var i=0;i<data.length;i++) {
@@ -195,6 +197,9 @@ function piece_onclick(data) {
 
 function clicked(e){
     var o = e.target.id;  //dinei to id tou img
+    //var imgToRemove = document.getElementById(o);
+    //var parentElement = imgToRemove.parentNode;
+    //parentElement.removeChild(imgToRemove);
     var a = o.split(/_/);
     var o2 = e.currentTarget.id;  //dinei to id tou keliou
     var b = o2.split(/_/);
@@ -294,6 +299,8 @@ function example_function(x1,y1,p_num,color,sql_steps){
             if(steps_to_final >=4){
                 var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + 3];
                 do_move(x2y2[0],x2y2[1],p_num,total_steps);
+                //record which pawn went in, and call a win when all 4 pawns get inside
+                //printing all the pawns will be a damn pain in the bum so lets not
             }else{
                 var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + steps_to_final];
                 do_move(x2y2[0],x2y2[1],p_num,total_steps);
@@ -310,7 +317,7 @@ function do_move(x2,y2,p_num,sql_steps) {
 			contentType: 'application/json',
             data: JSON.stringify( {x: x2, y: y2, p_num: p_num, steps: sql_steps}),//anything we put here, will end up in the input array
 			success: move_result,
-			error: login_error
+			error: move_result
         });
 }
 
@@ -341,8 +348,14 @@ function login_result(data) {
 }
 
 function login_error(data) {
-	var x = data.responseJSON;
-	alert(x.errormesg);
+    console.log("Full data:", data);
+
+    var x = data.responseJSON;
+    if (x && x.errormesg) {
+        alert(x.errormesg);
+    } else {
+        alert("Unknown error occurred.");
+    }
 }
 
 function game_status_update() {	
@@ -354,7 +367,7 @@ function game_status_update() {
 
 function update_status(data) {
 	last_update = new Date().getTime();
-	//var game_stat_old = game_status;
+    draw_board();
     draw_pawns();
 	game_status = data[0];
 	update_info();
@@ -389,14 +402,14 @@ function update_info(){
 
 function move_result(data){
     game_status_update();
-    if (data.length > 1){
+    draw_board();
+    if (data != []){
         try{
             draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
         }catch(error){
             alert(error);
         }
     }else{
-        //
         alert("Ωχ υπάρχουν ήδη 2 πιόνια στο κουτί, ρίξε το ζάρι ξανά ή διάλεξε νεο πιόνι!");
     }
 }
