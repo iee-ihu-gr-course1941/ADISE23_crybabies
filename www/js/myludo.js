@@ -16,7 +16,7 @@ $(function() {
 })
 
 $(window).bind('beforeunload', function(){
-    return ' ';
+    return "Σίγουρα θέλετε να αποχωρήσετε;";
 });
 $(window).bind('unload', function(){
     restart_game();
@@ -89,7 +89,7 @@ function player_pieces(p_color) {
         }
     );
 }
-//gotta find a solution to the .click stacking and running clicked 1000 god damn times
+
 function piece_onclick(data) {
     if(dice_output == 6){
         for(var i=0;i<data.length;i++) {
@@ -197,13 +197,9 @@ function piece_onclick(data) {
 
 function clicked(e){
     var o = e.target.id;  //dinei to id tou img
-    //var imgToRemove = document.getElementById(o);
-    //var parentElement = imgToRemove.parentNode;
-    //parentElement.removeChild(imgToRemove);
     var a = o.split(/_/);
     var o2 = e.currentTarget.id;  //dinei to id tou keliou
     var b = o2.split(/_/);
-    //window.alert(a[1] + ' ' + a[2] + " x="+ b[1]+ "y=" +b[2]);  //shows which pawn you clicked and the keli x y that the pawn is located in
     get_sql_sum(b[1],b[2],a[2],a[1]);
 }
 
@@ -367,22 +363,14 @@ function game_status_update() {
 
 function update_status(data) {
 	last_update = new Date().getTime();
-    draw_board();
+    //draw_board(); //activate if you want automatic redraw of pawns
     draw_pawns();
 	game_status = data[0];
 	update_info();
 	clearTimeout(timer);
 	if(game_status.p_turn == me.piece_color &&  me.piece_color != null) {
-		x = 0;
-		// do play
-		//if(game_stat_old.p_turn != game_status.p_turn) {
-		//	fill_board();
-		//}
-		$('#move_div').show(1000);
 		timer = setTimeout(function() { game_status_update();}, 15000);
 	} else {
-		// must wait for something
-		$('#move_div').hide(1000);
 		timer = setTimeout(function() { game_status_update();}, 4000);
 	}
 }
@@ -403,7 +391,7 @@ function update_info(){
 function move_result(data){
     game_status_update();
     draw_board();
-    if (data != []){
+    if (data != []){//to pawns epistrefei [] otan vriskei 2 pionia
         try{
             draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
         }catch(error){
@@ -423,6 +411,8 @@ function restart_game() {
 
 function new_game(){
 	alert("Εκκίνηση νέου παιχνιδιού!");
-    location.replace("http://localhost/MyProject/www/");
-    draw_empty_board();
+    draw_board();
+    draw_pawns();
+    $('#game_initializer').hide();
+	game_status_update();
 }

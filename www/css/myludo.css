@@ -1,7 +1,7 @@
 #ludo_table td {
     width: 2em;
     height: 2em;
-    border: 0.5px solid rgb(193, 213, 210);
+    border: 0.1px solid rgb(193, 213, 210);
     text-align: center;
     background-position: center;
     background-size: contain;
@@ -10,6 +10,8 @@
 
 #ludo_table {
     border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 TD.B_square {background-color:rgb(1, 53, 147)}
@@ -60,3 +62,40 @@ TD.YR_square {
 TD.RBGY_square {
     background: conic-gradient(rgb(1, 75, 0) 0deg 45deg, rgb(255, 204, 0) 45deg 135deg, rgb(180, 0, 0) 135deg 225deg, rgb(1, 53, 147) 225deg 315deg, rgb(1, 75, 0) 315deg 360deg);
 }
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Apply square shape to buttons, inputs, and selects */
+button, input, select {
+    box-sizing: border-box;
+    border-radius: 0;
+    padding: 8px; /* Adjust the padding according to your needs */
+    width: auto; /* Allow elements to expand based on content */
+    height: auto; /* Allow elements to expand based on content */
+  }
+  
+  /* Add additional styling for better appearance */
+  button, input[type="button"], input[type="submit"], input[type="reset"], select {
+    background-color: rgb(32, 173, 227); /* Green background color */
+    color: white; /* White text color */
+    border: 1px solid rgb(32, 173, 227); /* Green border */
+    border-radius: 0;
+    cursor: pointer; /* Add a pointer cursor on hover */
+    border-radius: 4px; /* Optional: Add rounded corners */
+  }
+  
+  input, select {
+    border: 1px solid #ccc; /* Default border color */
+    padding: 8px; /* Adjust the padding for inputs and selects */
+  }
+  
+  /* Optional: Style hover and focus states */
+  button:hover, input:hover, select:hover,
+  button:focus, input:focus, select:focus {
+    background-color: rgb(31, 157, 207); /* Darker green on hover/focus */
+    border: 1px solid rgb(31, 157, 207); /* Darker green border on hover/focus */
+    outline: none; /* Remove default focus outline */
+  }
+  
