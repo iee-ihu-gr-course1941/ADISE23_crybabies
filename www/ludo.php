@@ -40,10 +40,22 @@ switch ($r = array_shift($request)) {
     break;
     
     case 'status': //if the first element is 'status'
-		if(sizeof($request) == 0){
-            handle_status($method);
-        }else{
-            header("HTTP/1.1 404 Not Found");
+        switch ($b = array_shift($request)){
+            case '':
+            case null: 
+                handle_status($method);
+            break;
+                
+            case 'R':
+            case 'B':
+            case 'G':
+            case 'Y':
+                handle_turn($method, $b);
+            break;
+                
+            default: 
+                header("HTTP/1.1 404 Not Found");
+            break;
         }
 	break;
 	
@@ -85,7 +97,15 @@ function handle_board($method) {
 function handle_status($method) {
     if($method=='GET') {
         show_status();//function from gamestat.php
-    } else {
+    } else{
+        header('HTTP/1.1 405 Method Not Allowed');
+    }
+}
+
+function handle_turn($method, $t){
+    if($method=='PUT'){
+        insert_status($t);
+    } else{
         header('HTTP/1.1 405 Method Not Allowed');
     }
 }
