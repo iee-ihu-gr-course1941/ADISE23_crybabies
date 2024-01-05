@@ -78,4 +78,12 @@ function check_abort() {
 	$st = $mysqli->prepare($sql);
 	$r = $st->execute();
 }
+
+function insert_status($t){
+	global $mysqli;
+	$sql = 'update game_status set p_turn=?';
+	$st = $mysqli->prepare($sql);
+	$st->bind_param('s',$t);
+	$st->execute();
+}
 ?>

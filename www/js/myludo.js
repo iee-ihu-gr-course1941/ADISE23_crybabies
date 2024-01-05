@@ -215,9 +215,18 @@ function get_sql_sum(x1,y1,p_num,color) {
 function throw_dice() {
     dice_output = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
     update_info();
+
+    /*
+    var old_turn = game_status.p_turn;
+    if(dice_output == 6){
+        game_status.p_turn = old_turn;
+        game_status_update();
+    }
+    */
+
+    //highlight pawns
     switch (game_status.p_turn){
         case 'G':
-            //highlight pawns
             player_pieces("G");
             break;
         case 'Y':
@@ -386,14 +395,29 @@ function update_info(){
     + ' must play now.');
 
     $('#dice_info').html("DICE : " + dice_output);
+
+    if(game_status.status == 'not active' && game_status.p_turn == null && $('#game_initializer').is(":hidden")) {
+		alert('Oops looks like another player ended the game.. Enter your name to start a new game!');
+        $('#game_initializer').show();
+		return;
+	}
 }
 
 function move_result(data){
-    game_status_update();
     draw_board();
     if (data != []){//to pawns epistrefei [] otan vriskei 2 pionia
         try{
             draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
+
+            if(dice_output == 6){
+                var color = game_status.p_turn;
+                alert(color);
+                $.ajax({url: "ludo.php/status/" + color, 
+                		method: 'PUT',
+                        success: update_status
+                    });
+            } 
+            game_status_update();
         }catch(error){
             alert(error);
         }
@@ -413,6 +437,6 @@ function new_game(){
 	alert("Εκκίνηση νέου παιχνιδιού!");
     draw_board();
     draw_pawns();
-    $('#game_initializer').hide();
-	game_status_update();
+    game_status_update();
+    $('#game_initializer').show();
 }
