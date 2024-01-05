@@ -16,7 +16,7 @@ $(function() {
 })
 
 $(window).bind('beforeunload', function(){
-    return "Σίγουρα θέλετε να αποχωρήσετε;";
+    return ' ';
 });
 $(window).bind('unload', function(){
     restart_game();
@@ -95,6 +95,7 @@ function piece_onclick(data) {
         for(var i=0;i<data.length;i++) {
             var o = data[i];
             var id = '#square_'+ o.x +'_' + o.y;
+            $(id).off('click', clicked);
             $(id).click(clicked);
         }
     }else{
@@ -117,6 +118,7 @@ function piece_onclick(data) {
                             $(id).off('click', clicked);
                             break;
                         default:
+                            $(id).off('click', clicked);
                             $(id).click(clicked);
                             break;
                     }
@@ -140,6 +142,7 @@ function piece_onclick(data) {
                             $(id).off('click', clicked);
                             break;
                         default:
+                            $(id).off('click', clicked);
                             $(id).click(clicked);
                             break;
                     }
@@ -163,6 +166,7 @@ function piece_onclick(data) {
                             $(id).off('click', clicked);
                             break;
                         default:
+                            $(id).off('click', clicked);
                             $(id).click(clicked);
                             break;
                     }
@@ -186,6 +190,7 @@ function piece_onclick(data) {
                             $(id).off('click', clicked);
                             break;
                         default:
+                            $(id).off('click', clicked);
                             $(id).click(clicked);
                             break;
                     }

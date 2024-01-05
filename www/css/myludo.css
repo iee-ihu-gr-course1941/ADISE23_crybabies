@@ -1,4 +1,30 @@
-#ludo_table td {
+
+
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    height: 100vh;
+  }
+  
+  .section {
+    padding-top: 2%;
+    padding-left: 4%;
+  }
+  .section2 {
+    padding-top: 10%;
+  }
+  .section3 {
+    padding-top: 2%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  #ludo_table td {
     width: 2em;
     height: 2em;
     border: 0.1px solid rgb(193, 213, 210);
@@ -70,20 +96,18 @@ body {
 /* Apply square shape to buttons, inputs, and selects */
 button, input, select {
     box-sizing: border-box;
-    border-radius: 0;
-    padding: 8px; /* Adjust the padding according to your needs */
+    padding: 5px; /* Adjust the padding according to your needs */
     width: auto; /* Allow elements to expand based on content */
     height: auto; /* Allow elements to expand based on content */
   }
   
   /* Add additional styling for better appearance */
   button, input[type="button"], input[type="submit"], input[type="reset"], select {
-    background-color: rgb(32, 173, 227); /* Green background color */
-    color: white; /* White text color */
-    border: 1px solid rgb(32, 173, 227); /* Green border */
-    border-radius: 0;
+    background-color: rgba(199, 190, 183, 0.336); /* Green background color */
+    color: black; /* White text color */
+    border: 1px solid rgba(199, 190, 183, 0.336); /* Green border */
     cursor: pointer; /* Add a pointer cursor on hover */
-    border-radius: 4px; /* Optional: Add rounded corners */
+    border-radius: 0px; /* Optional: Add rounded corners */
   }
   
   input, select {
@@ -94,8 +118,7 @@ button, input, select {
   /* Optional: Style hover and focus states */
   button:hover, input:hover, select:hover,
   button:focus, input:focus, select:focus {
-    background-color: rgb(31, 157, 207); /* Darker green on hover/focus */
-    border: 1px solid rgb(31, 157, 207); /* Darker green border on hover/focus */
+    background-color: rgba(236, 213, 197, 0.336); /* Darker green on hover/focus */
+    border: 1px solid rgba(199, 190, 183, 0.336); /* Darker green border on hover/focus */
     outline: none; /* Remove default focus outline */
   }
-  

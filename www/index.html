@@ -17,31 +17,46 @@
   </head>
 
 <body>
-    <h2>ΓΚΡΙΝΙΑΡΗΣ</h2>
 
-    <button id="new_game" >Νέο Παιχνίδι</button>
+  <div class="container">
+    <div class="section">
+      <div><h2>ΓΚΡΙΝΙΑΡΗΣ</h2></div>
+  
+      <div id='game_initializer'>
+        <input id='username'> 
+        <select id='pcolor'>
+          <option value='R'>R</option>
+          <option value='B'>B</option>
+          <option value='G'>G</option>
+          <option value='Y'>Y</option>
+        </select>
+        <button id='ludo_login'>ΕΙΣΟΔΟΣ ΣΤΟ ΠΑΙΧΝΙΔΙ</button>
+      </div>
+      
+      <div>
+        <button id="new_game" >Νέο Παιχνίδι</button>
+        <button id="dice">Ρίξε μια ζαριά</button>
+        <div id="dice_info"></div>
+      </div>
 
-    <div id='ludo_board'></div>
-    
-    <div id='game_info'></div>
-    
-    <br/>
-    
-    <div id='game_initializer'>
-      <input id='username'> 
-      <select id='pcolor'>
-        <option value='R'>R</option>
-        <option value='B'>B</option>
-        <option value='G'>G</option>
-        <option value='Y'>Y</option>
-      </select>
-      <br/>
-      <button id='ludo_login'>ΕΙΣΟΔΟΣ ΣΤΟ ΠΑΙΧΝΙΔΙ</button>
+      <div id='game_info' ></div>
     </div>
-    
-    <div><button id="dice">Ρίξε μια ζαριά</button></div>
-    
-    <div id="dice_info"></div>
+
+    <div class="section2">
+      <div id='ludo_board' ></div>
+
+    </div>
+<!--    <div class="section3">
+      <div><h2>SCOREBOARD</h2></div>
+      <div><h3>1. Nugget Winner</h3></div>
+      <div><h3>2. Crumb Winner</h3></div>
+      <div><h3>3. Tah Bomboclat</h3></div>
+      <div><h3>4. Smelly Foot</h3></div>  
+    </div>
+-->    
+  </div>
+
+
 
 </body>
 </html>
