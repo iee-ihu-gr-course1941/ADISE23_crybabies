@@ -180,7 +180,7 @@ CREATE TABLE IF NOT EXISTS `game_status` (
 
 -- Dumping data for table ludo.game_status: ~0 rows (approximately)
 INSERT INTO `game_status` (`status`, `p_turn`, `result_1`, `result_2`, `result_3`, `last_change`, `logged`) VALUES
-	('not active', NULL, NULL, NULL, NULL, '2023-12-30 15:21:46', NULL);
+	('not active', NULL, NULL, NULL, NULL, '2024-01-06 17:54:40', NULL);
 
 -- Dumping structure for procedure ludo.move_piece
 DELIMITER //
@@ -189,15 +189,14 @@ BEGIN
 	DECLARE x1,y1 TINYINT;
 	SELECT x,y INTO x1,y1 FROM `pawns` WHERE p_color=color AND p_num=num;
 	UPDATE `pawns` SET x=x2, y=y2, sum=steps WHERE p_color=color AND p_num=num;
-	UPDATE `pawns` SET p_color=NULL, p_num=NULL WHERE x=x1 AND y=y1;
-	
-	UPDATE `game_status` SET p_turn = (case 
-														WHEN color = 'R' then 'B'
-														WHEN color = 'B' then 'G'
-														WHEN color = 'G' then 'Y'
-														WHEN color = 'Y' then 'R'
-														ELSE null
-														END);
+		
+	UPDATE `game_status` SET p_turn = (CASE 
+														WHEN (SELECT username FROM `players` WHERE p_color='B') IS NOT NULL AND color = 'R' THEN 'B'
+														WHEN (SELECT username FROM `players` WHERE p_color='G') IS NOT NULL AND color = 'B' THEN 'G'
+														WHEN (SELECT username FROM `players` WHERE p_color='Y') IS NOT NULL AND color = 'G' THEN 'Y'
+														WHEN (SELECT username FROM `players` WHERE p_color='R') IS NOT NULL AND color = 'Y' THEN 'R'
+														ELSE 'R'
+													END);
 END//
 DELIMITER ;
 
