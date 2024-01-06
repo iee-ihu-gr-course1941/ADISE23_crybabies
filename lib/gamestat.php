@@ -22,7 +22,7 @@ function show_status() {
 
 }
 
-function update_game_status() {//rename the st variables, globaly
+function update_game_status() {
 	global $mysqli;
 	$status = read_status();	
 	$new_status = null;

@@ -65,6 +65,12 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
 	$res2 = $st2->get_result();
 	$population = $res2->fetch_assoc()['population'];
 
+	$st4 = $mysqli->prepare('select b_fun from board where x=? and y=?');
+	$st4->bind_param('ii',$x2,$y2 );
+	$st4->execute();
+	$res4 = $st4->get_result();
+	$block_function = $res4->fetch_assoc();
+
 	if($population > 0 && $population < 2){//if population is 1
 
         $st3 = $mysqli->prepare('select p_color from pawns where x=? and y=?');
@@ -72,12 +78,6 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
         $st3->execute();
         $res3 = $st3->get_result();
 		$existing_color = $res3->fetch_assoc();
-
-        $st4 = $mysqli->prepare('select b_fun from board where x=? and y=?');
-		$st4->bind_param('ii',$x2,$y2 );
-        $st4->execute();
-        $res4 = $st4->get_result();
-		$block_function = $res4->fetch_assoc();
 
 		$st5 = $mysqli->prepare('select p_num from pawns where x=? and y=?');
 		$st5->bind_param('ii',$x2,$y2 );
@@ -104,11 +104,14 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
 			do_move($x2,$y2,$p_num,$color,$steps);//move new piece
         }
     }else if($population >= 2){//if pionia are 2 akrivos
-		//check if possition is _end possition first
-		$result_data = array();
-		header('Content-type: application/json');
-		print json_encode($result_data, JSON_PRETTY_PRINT);
-        //empty array so player can throw dice again or chose another piece
+		if (substr($block_function['b_fun'], -4) === '_end'){
+			do_move($x2,$y2,$p_num,$color,$steps);
+		}else{
+			$result_data = array();
+			header('Content-type: application/json');
+			print json_encode($result_data, JSON_PRETTY_PRINT);
+			//empty array so player can throw dice again or chose another piece
+		}
     }else{
         do_move($x2,$y2,$p_num,$color,$steps);//move new piece
     }

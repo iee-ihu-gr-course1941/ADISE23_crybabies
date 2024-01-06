@@ -6,11 +6,17 @@ var game_status={};
 var board={};
 var last_update=new Date().getTime();
 var timer=null;
-var green_won;
-var yellow_won;
-var blue_won;
-var red_won;
+var green_won = 0;
+var yellow_won = 0;
+var blue_won = 0;
+var red_won = 3;
 var scoreboard = [];
+const colorMap = {
+    'R': 'rgb(180, 0, 0)',
+    'G': 'rgb(1, 75, 0)',
+    'Y': 'rgb(255, 204, 0)',
+    'B': 'rgb(1, 53, 147)'
+};
 
 $(function() {
     draw_empty_board();
@@ -414,16 +420,14 @@ function update_status(data) {
 }
 
 function update_info(){
-	$('#game_info').html("I am Player: " + me.p_color + 
-    ", my name is " + me.username 
-    + '<br>Token=' + me.token 
-    + '<br>Game state: ' 
-    + game_status.status 
-    + ', ' 
-    + game_status.p_turn 
-    + ' must play now.');
+    $('#game_info').html("I am Player: <span style='font-weight: bold; color: " + colorMap[me.p_color] + ";'>" + me.p_color + 
+    "</span>, my name is <span style='font-weight: bold;'>" + me.username + '</span>' +
+    "<br>Token: <span style='color: DarkSlateBlue;'>" + me.token + "</span>"+
+    '<br>Game state: <span style="color: navy; font-weight: bold;">' + game_status.status + '</span>' + ", " +
+    '<span style="font-weight: bold;color: ' + colorMap[game_status.p_turn] + ';">' + game_status.p_turn + '</span> must play now.');
 
-    $('#dice_info').html("DICE : " + dice_output);
+
+    $('#dice_info').html("Ζάρι : " + "<span style='font-weight: bold;'>" + dice_output + "</span>");
 
     if(game_status.status == 'not active' && game_status.p_turn == null && $('#game_initializer').is(":hidden")) {
 		alert('Oops looks like another player ended the game.. Enter your name to start a new game!');
@@ -449,7 +453,7 @@ function move_result(data){
             alert(error);
         }
     }else{
-        alert("Ωχ υπάρχουν ήδη 2 πιόνια στο κουτί, ρίξε το ζάρι ξανά ή διάλεξε νεο πιόνι!");
+        window.alert("Ωχ υπάρχουν ήδη 2 πιόνια στο κουτί, ρίξε το ζάρι ξανά ή διάλεξε νεο πιόνι!");
     }
 }
 
