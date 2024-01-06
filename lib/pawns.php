@@ -115,7 +115,7 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
 
 function do_move($x2,$y2,$p_num,$color,$steps) {
 	global $mysqli;
-	$sql = 'call `move_piece`(?,?,?,?,?);';
+	$sql = 'call move_piece(?,?,?,?,?)';
 	$st = $mysqli->prepare($sql);
 	$st->bind_param('iiisi',$x2,$y2,$p_num,$color,$steps);
 	$st->execute();

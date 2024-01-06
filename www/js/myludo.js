@@ -70,11 +70,11 @@ function draw_pawns_by_data(data) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
         if (seen.has(id)){
-            var c1 = '<img id="piece_' + data[seen.get(id)].p_color + '_' + data[seen.get(id)].p_num + '" src="images/' + data[seen.get(id)].p_color + '.png" width="14" height="14" style="top: 0; left: 0; position: absolute;">';
-            var c2 = '<img id="piece_' + o.p_color + '_' + o.p_num + '" src="images/' + o.p_color + '.png" width="14" height="14" style="bottom: 0; right: 0; position: absolute;">';
+            var c1 = (o.p_color!=null)?'<img id="piece_' + data[seen.get(id)].p_color + '_' + data[seen.get(id)].p_num + '" src="images/' + data[seen.get(id)].p_color + '.png" width="14" height="14" style="top: 0; left: 0; position: absolute;">' : '';
+            var c2 = (o.p_color!=null)?'<img id="piece_' + o.p_color + '_' + o.p_num + '" src="images/' + o.p_color + '.png" width="14" height="14" style="bottom: 0; right: 0; position: absolute;">' : '';
             var c = c1 + c2;
         }else{
-            var c = (o.p_color!=null) ? '<img id="piece_'+o.p_color+'_'+o.p_num+'" src="images/'+o.p_color+'.png" width="25" height="25">' : '';
+            var c = (o.p_color!=null)?'<img id="piece_'+o.p_color+'_'+o.p_num+'" src="images/'+o.p_color+'.png" width="25" height="25">' : '';
         }
         seen.set(id, i);
         $(id).html(c);
@@ -409,20 +409,18 @@ function update_info(){
 }
 
 function move_result(data){
-    draw_board();
     if (data != []){//to pawns epistrefei [] otan vriskei 2 pionia
         try{
+            draw_board();
             draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
 
             if(dice_output == 6){
                 var color = game_status.p_turn;
-                alert(color);
                 $.ajax({url: "ludo.php/status/" + color, 
                 		method: 'PUT',
-                        success: update_status
+                        success: update_info
                     });
-            } 
-            game_status_update();
+            }
         }catch(error){
             alert(error);
         }
