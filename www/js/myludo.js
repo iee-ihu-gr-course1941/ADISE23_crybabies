@@ -6,6 +6,11 @@ var game_status={};
 var board={};
 var last_update=new Date().getTime();
 var timer=null;
+var green_won;
+var yellow_won;
+var blue_won;
+var red_won;
+var scoreboard = [];
 
 $(function() {
     draw_empty_board();
@@ -247,18 +252,8 @@ function throw_dice() {
 }
 
 function example_function(x1,y1,p_num,color,sql_steps){
-        var xy = x1 + '.' + y1;
-        var coordinates = parseFloat(xy);
-    switch (coordinates){
-        case 7.10:
-            coordinates = 7.12;
-            break;
-        case 5.10:
-            coordinates = 5.12;
-            break;
-        default:
-            break;
-    }
+    var xy = x1 + '.' + y1;
+    var coordinates = xy.toString();
     var current_position = COORDINATES_MAP.coordinatesToKey[coordinates];
     if(sql_steps == null || sql_steps == 0){
         switch (color){
@@ -309,8 +304,37 @@ function example_function(x1,y1,p_num,color,sql_steps){
             if(steps_to_final >=4){
                 var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + 3];
                 do_move(x2y2[0],x2y2[1],p_num,total_steps);
-                //record which pawn went in, and call a win when all 4 pawns get inside
-                //printing all the pawns will be a damn pain in the bum so lets not
+                
+                switch (color){
+                    case 'G':
+                        green_won++;
+                        break;
+                    case 'Y':
+                        yellow_won++;
+                        break;
+                    case 'B':
+                        blue_won++;
+                        break;
+                    case 'R':
+                        red_won++;
+                        break;
+                }
+
+                if (blue_won == 4) {
+                    scoreboard.push(color);
+                } else if (green_won == 4) {
+                    scoreboard.push(color);
+                } else if (red_won == 4) {
+                    scoreboard.push(color);
+                } else if (yellow_won == 4) {
+                    scoreboard.push(color);
+                } else {
+                    // No player has won
+                }
+                $('#0_place').html("1. " + scoreboard[0]);
+                $('#1_place').html("2. " + scoreboard[1]);
+                $('#2_place').html("3. " + scoreboard[2]);
+                $('#3_place').html("4. " + scoreboard[3]);
             }else{
                 var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + steps_to_final];
                 do_move(x2y2[0],x2y2[1],p_num,total_steps);

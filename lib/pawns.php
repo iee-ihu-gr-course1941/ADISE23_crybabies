@@ -104,6 +104,7 @@ function move_piece($x2,$y2,$p_num,$steps,$token){
 			do_move($x2,$y2,$p_num,$color,$steps);//move new piece
         }
     }else if($population >= 2){//if pionia are 2 akrivos
+		//check if possition is _end possition first
 		$result_data = array();
 		header('Content-type: application/json');
 		print json_encode($result_data, JSON_PRETTY_PRINT);
