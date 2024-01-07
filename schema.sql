@@ -178,13 +178,13 @@ CREATE TABLE IF NOT EXISTS `game_status` (
   `logged` enum('1','2','3','4') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- Dumping data for table ludo.game_status: ~0 rows (approximately)
+-- Dumping data for table ludo.game_status: ~1 rows (approximately)
 INSERT INTO `game_status` (`status`, `p_turn`, `result_1`, `result_2`, `result_3`, `last_change`, `logged`) VALUES
-	('not active', NULL, NULL, NULL, NULL, '2024-01-06 17:54:40', NULL);
+	('not active', NULL, NULL, NULL, NULL, '2024-01-07 20:31:55', NULL);
 
 -- Dumping structure for procedure ludo.move_piece
 DELIMITER //
-CREATE PROCEDURE `move_piece`(x2 TINYINT, y2 TINYINT, num CHAR, color CHAR, steps CHAR)
+CREATE PROCEDURE `move_piece`(x2 TINYINT, y2 TINYINT, num CHAR, color CHAR, steps TINYINT)
 BEGIN
 	DECLARE x1,y1 TINYINT;
 	SELECT x,y INTO x1,y1 FROM `pawns` WHERE p_color=color AND p_num=num;

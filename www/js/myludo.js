@@ -9,7 +9,7 @@ var timer=null;
 var green_won = 0;
 var yellow_won = 0;
 var blue_won = 0;
-var red_won = 3;
+var red_won = 0;
 var scoreboard = [];
 const colorMap = {
     'R': 'rgb(180, 0, 0)',
@@ -232,14 +232,6 @@ function throw_dice() {
     dice_output = Math.floor(Math.random() * (6 - 1 + 1)) + 1;
     update_info();
 
-    /*
-    var old_turn = game_status.p_turn;
-    if(dice_output == 6){
-        game_status.p_turn = old_turn;
-        game_status_update();
-    }
-    */
-
     //highlight pawns
     switch (game_status.p_turn){
         case 'G':
@@ -420,12 +412,11 @@ function update_status(data) {
 }
 
 function update_info(){
-    $('#game_info').html("I am Player: <span style='font-weight: bold; color: " + colorMap[me.p_color] + ";'>" + me.p_color + 
-    "</span>, my name is <span style='font-weight: bold;'>" + me.username + '</span>' +
-    "<br>Token: <span style='color: DarkSlateBlue;'>" + me.token + "</span>"+
-    '<br>Game state: <span style="color: navy; font-weight: bold;">' + game_status.status + '</span>' + ", " +
-    '<span style="font-weight: bold;color: ' + colorMap[game_status.p_turn] + ';">' + game_status.p_turn + '</span> must play now.');
-
+    $('#game_info').html("I am Player : <span style='font-weight: bold; color: " + colorMap[me.p_color] + ";'>" + me.p_color + 
+    "</span><br>My name is : <span style='font-weight: bold;'>" + me.username + '</span>' +
+    "<br>Token : <span style='font-style: italic;'>" + me.token + "</span>"+
+    '<br>Game state : <span style="font-weight: bold;">' + game_status.status + '</span>' + "<br> Player " +
+    '<span style="font-weight: bold;color: ' + colorMap[game_status.p_turn] + ';">' + game_status.p_turn + '</span> must play now!');
 
     $('#dice_info').html("Ζάρι : " + "<span style='font-weight: bold;'>" + dice_output + "</span>");
 
@@ -437,7 +428,7 @@ function update_info(){
 }
 
 function move_result(data){
-    if (data != []){//to pawns epistrefei [] otan vriskei 2 pionia
+    if (data != []){
         try{
             draw_board();
             draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
@@ -453,7 +444,7 @@ function move_result(data){
             alert(error);
         }
     }else{
-        window.alert("Ωχ υπάρχουν ήδη 2 πιόνια στο κουτί, ρίξε το ζάρι ξανά ή διάλεξε νεο πιόνι!");
+        window.alert("Ωχ υπάρχουν ήδη 2 πιόνια σ'αυτή τη θέση.. ρίξε ξανά το ζάρι ή κούνησε άλλο πιόνι!");
     }
 }
 
