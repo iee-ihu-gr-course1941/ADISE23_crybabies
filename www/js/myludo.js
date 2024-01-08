@@ -6,6 +6,7 @@ var game_status={};
 var board={};
 var last_update=new Date().getTime();
 var timer=null;
+var timer2=null;
 var green_won = 0;
 var yellow_won = 0;
 var blue_won = 0;
@@ -23,7 +24,9 @@ $(function() {
 
     $('#ludo_login').click( login_to_game );
     $('#dice').click( throw_dice );
-    $('#new_game').click( restart_game );
+    $('#new_game').click(function() {
+        restart_game('buttonClick');
+    });
 })
 
 $(window).bind('beforeunload', function(){
@@ -56,11 +59,12 @@ function draw_board() {
 }
 
 function draw_board_by_data(data) {
+    var c = '';
     for(var i=0;i<data.length;i++) {
         var o = data[i];
         var id = '#square_'+ o.x +'_' + o.y;
         //gia na kanei refresh ta pionia
-        var c = (o.p_color!=null) ? '' : '';
+        //var c = (o.p_color!=null) ? '' : '';
         $(id).html(c);
         $(id).addClass(o.b_color+'_square');
     }
@@ -90,6 +94,7 @@ function draw_pawns_by_data(data) {
         seen.set(id, i);
         $(id).html(c);
     }
+    pawn_refresh();
 }
 
 function player_pieces(p_color) {
@@ -223,7 +228,7 @@ function get_sql_sum(x1,y1,p_num,color) {
     $.ajax({url: "ludo.php/psum/" + color + "/" + p_num,
         method: 'GET',
         success: function(data) {
-            example_function(x1,y1,p_num,color,data[0].sum);
+            position_calc(x1,y1,p_num,color,data[0].sum);
         }
     });
 }
@@ -249,7 +254,7 @@ function throw_dice() {
     }
 }
 
-function example_function(x1,y1,p_num,color,sql_steps){
+function position_calc(x1,y1,p_num,color,sql_steps){
     var xy = x1 + '.' + y1;
     var coordinates = xy.toString();
     var current_position = COORDINATES_MAP.coordinatesToKey[coordinates];
@@ -320,12 +325,16 @@ function example_function(x1,y1,p_num,color,sql_steps){
 
                 if (blue_won == 4) {
                     scoreboard.push(color);
+                    restart_game(color);
                 } else if (green_won == 4) {
                     scoreboard.push(color);
+                    restart_game(color);
                 } else if (red_won == 4) {
                     scoreboard.push(color);
+                    restart_game(color);
                 } else if (yellow_won == 4) {
                     scoreboard.push(color);
+                    restart_game(color);
                 } else {
                     // No player has won
                 }
@@ -399,16 +408,15 @@ function game_status_update() {
 
 function update_status(data) {
 	last_update = new Date().getTime();
-    //draw_board(); //activate if you want automatic redraw of pawns
-    draw_pawns();
 	game_status = data[0];
 	update_info();
 	clearTimeout(timer);
-	if(game_status.p_turn == me.piece_color &&  me.piece_color != null) {
-		timer = setTimeout(function() { game_status_update();}, 15000);
-	} else {
-		timer = setTimeout(function() { game_status_update();}, 4000);
-	}
+	timer = setTimeout(function() { game_status_update();}, 4000);
+}
+
+function pawn_refresh(){
+    clearTimeout(timer2);
+    timer2 = setTimeout(function() {draw_pawns();}, 600);
 }
 
 function update_info(){
@@ -419,20 +427,19 @@ function update_info(){
     '<span style="font-weight: bold;color: ' + colorMap[game_status.p_turn] + ';">' + game_status.p_turn + '</span> must play now!');
 
     $('#dice_info').html("Ζάρι : " + "<span style='font-weight: bold;'>" + dice_output + "</span>");
-
-    if(game_status.status == 'not active' && game_status.p_turn == null && $('#game_initializer').is(":hidden")) {
-		alert('Oops looks like another player ended the game.. Enter your name to start a new game!');
+    
+    if(game_status.status == 'not active' && game_status.p_turn == null && $('#game_initializer').is(":hidden")){
+        window.alert('Oops looks like another player ended the game.. Enter your name to start a new game!');
         $('#game_initializer').show();
 		return;
-	}
+    }
 }
 
 function move_result(data){
-    if (data != []){
+    if (data.length != 0){
         try{
             draw_board();
-            draw_pawns_by_data(data);   //gia automath emfanish metakinhshs pioniwn
-
+            draw_pawns();
             if(dice_output == 6){
                 var color = game_status.p_turn;
                 $.ajax({url: "ludo.php/status/" + color, 
@@ -441,24 +448,32 @@ function move_result(data){
                     });
             }
         }catch(error){
-            alert(error);
+            window.alert(error);
         }
     }else{
         window.alert("Ωχ υπάρχουν ήδη 2 πιόνια σ'αυτή τη θέση.. ρίξε ξανά το ζάρι ή κούνησε άλλο πιόνι!");
     }
 }
 
-function restart_game() {
+function restart_game(source) {
 	$.ajax({url: "ludo.php/users", 
 			method: 'PUT',
-            success: new_game,
+            success: new_game(source),
         });
 }
 
-function new_game(){
-	alert("Εκκίνηση νέου παιχνιδιού!");
+function new_game(source){
+    if (source == 'buttonClick'){
+        alert("Εκκίνηση νέου παιχνιδιού!");
+    }else{
+        alert("Ο παίκτης " + source + " νίκησε πρώτος! Εκκίνηση νέου παιχνιδιού.");
+    }
     draw_board();
     draw_pawns();
     game_status_update();
+    green_won = 0;
+    red_won = 0;
+    yellow_won = 0;
+    blue_won = 0;
     $('#game_initializer').show();
 }
