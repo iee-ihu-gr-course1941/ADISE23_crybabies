@@ -114,7 +114,7 @@ https://users.iee.ihu.gr/~asidirop/adise21/Lectures21-chess/
 Προγραμματιστής 1: Jquery
 
 - Βαλέριο Κιόσε 2019070 <br/>
-- Ελένη Δαυ 2019030 <br/>
+- Ελένη Δαυιτίδου 2019030 <br/>
 
 # Περιγραφή API
 
