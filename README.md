@@ -28,7 +28,7 @@ Table of Contents
 # Demo Page
 
 Μπορείτε να κατεβάσετε τοπικά ή να επισκευτείτε την σελίδα: 
-https://users.iee.ihu.gr/~iee2019070/ADISE23_crybabies/www/
+https://users.iee.ihu.gr/~iee2019070/ADISE23_crybabies/
 
 # Εγκατάσταση
 
