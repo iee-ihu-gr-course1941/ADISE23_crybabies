@@ -28,7 +28,7 @@ Table of Contents
 # Demo Page
 
 Μπορείτε να κατεβάσετε τοπικά ή να επισκευτείτε την σελίδα: 
-https://users.iee.ihu.gr/~asidirop/adise21/Lectures21-chess/
+https://users.iee.ihu.gr/~iee2019070/ADISE23_crybabies/www/
 
 # Εγκατάσταση
 
