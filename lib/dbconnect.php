@@ -5,11 +5,11 @@ $db = 'ludo';
 
 //$user = $DB_USER;
 //$pass = $DB_PASS;
-$user = 'root';
+$user = 'iee2019070';
 $pass = '';
 
 if (gethostname() == 'users.iee.ihu.gr') {//check if we are trying to connect to users
-    $mysqli = new mysqli($host, $user, $pass, $db, null , '/home/staff/asidirop/mysql/run/mysql.sock');
+    $mysqli = new mysqli($host, $user, $pass, $db, null , '/home/student/iee/2019/iee2019070/mysql/run/mysql.sock');
 }else{//if not then its just localhost (xampp)
     $pass = null;
     $mysqli = new mysqli($host, $user, $pass, $db);
