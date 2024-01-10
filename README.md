@@ -128,7 +128,7 @@ https://users.iee.ihu.gr/~asidirop/adise21/Lectures21-chess/
 GET /board/
 ```
 
-Επιστρέφει το [Board](#board).
+Επιστρέφει το [Board](#board-1).
 
 ### Pawns
 
@@ -137,7 +137,7 @@ GET /board/
 GET /pawns/
 ```
 
-Επιστρέφει το [Pawns](#pawns).
+Επιστρέφει το [Pawns](#pawns-1).
 
 #### Ενημέρωση θέσης πιονιού
 ```
