@@ -27,6 +27,7 @@ $(function() {
     $('#new_game').click(function() {
         restart_game('buttonClick');
     });
+    $('#info').click( show_rules );
 })
 
 $(window).bind('beforeunload', function(){
@@ -476,4 +477,8 @@ function new_game(source){
     yellow_won = 0;
     blue_won = 0;
     $('#game_initializer').show();
+}
+
+function show_rules(){
+    $("#game_rules").toggleClass("visible");
 }
