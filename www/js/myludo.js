@@ -339,10 +339,6 @@ function position_calc(x1,y1,p_num,color,sql_steps){
                 } else {
                     // No player has won
                 }
-                $('#0_place').html("1. " + scoreboard[0]);
-                $('#1_place').html("2. " + scoreboard[1]);
-                $('#2_place').html("3. " + scoreboard[2]);
-                $('#3_place').html("4. " + scoreboard[3]);
             }else{
                 var x2y2 = COORDINATES_MAP.keyToCoordinates[finish_position + steps_to_final];
                 do_move(x2y2[0],x2y2[1],p_num,total_steps);
@@ -430,7 +426,7 @@ function update_info(){
     $('#dice_info').html("Ζάρι : " + "<span style='font-weight: bold;'>" + dice_output + "</span>");
     
     if(game_status.status == 'not active' && game_status.p_turn == null && $('#game_initializer').is(":hidden")){
-        window.alert('Oops looks like another player ended the game.. Enter your name to start a new game!');
+        window.alert('Ωχ, φαίνεται ότι κάποιος παίκτης τελείωσε το παιχνίδι.. Εισαγάγετε το όνομά σας για να ξεκινήσετε ένα νέο παιχνίδι!');
         $('#game_initializer').show();
 		return;
     }
